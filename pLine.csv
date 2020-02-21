@@ -1,0 +1,11 @@
+﻿,Cycle Time,Changeover,Operators Needed,X Distance,Y Distance
+Process 1,10,5,1,hi,100
+Process 2,20,10,2,200,200
+Process 3,20,15,3,300,300
+Process 4,40,20,4,400,400
+Process 5,50,25,5,500,500
+Process 6,60,30,6,600,600
+Process 7,70,35,7,700,700
+Process 8,80,40,8,800,800
+Process 9,90,45,9,900,900
+Process 10,100,50,10,1000,1000
