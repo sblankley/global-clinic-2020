@@ -1,7 +1,7 @@
 ﻿,Cycle Time,Changeover,Operators Needed,X Distance,Y Distance
-Process 1,10,5,1,hi,100
-Process 2,20,10,2,200,200
-Process 3,20,15,3,300,300
+Process 1,ENTER # Here,5,1,100,100
+Process 2,ENTER # Here,10,2,200,200
+Process 3,ENTER # Here,15,3,300,300
 Process 4,40,20,4,400,400
 Process 5,50,25,5,500,500
 Process 6,60,30,6,600,600
