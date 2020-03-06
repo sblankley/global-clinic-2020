@@ -1,7 +1,7 @@
 from math import ceil 
 
 # SETS
-workers = 5
+workers = 4
 jobs = 3 # number of jobs to assign
 stations = 3 # number of available workstations
 

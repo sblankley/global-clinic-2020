@@ -1,6 +1,6 @@
 from gekko import GEKKO
 from math import ceil 
-from header import *
+from CSVReader import *
 m = GEKKO()           # create GEKKO model
 
 

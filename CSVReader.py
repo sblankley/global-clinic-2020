@@ -2,6 +2,8 @@
 # CSV has 10 columns (9 if you don't include the space between task optimization and layout)
 # the very first row has titles "Task Optimization" and "Layout"
 # there are no empty rows 
+# the column names are the same as in HeaderInput.csv
+# the information corresponding to the column names is in the same order as in HeaderInput.csv
 # values entered into Process (#) are numbers 
 # values entered in Process (name) are strings
 # values entered in Cycle Time (s) are numbers
