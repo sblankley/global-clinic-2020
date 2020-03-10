@@ -76,7 +76,6 @@ m.solve(disp=True)
 # print('numWorkersAssigned:'+str(numWorkersAssigned))
 
 total = 0
-x[2][0][1].value = [1.0]
 print('x:'+str(x))
 print()
 for a in range(0,stations):
