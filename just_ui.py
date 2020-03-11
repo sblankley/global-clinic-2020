@@ -23,18 +23,17 @@ class Ui(QtWidgets.QMainWindow):
         self.pushButtonContinue = self.findChild(QtWidgets.QPushButton, "pushButtonResults")
         self.pushButtonContinue.clicked.connect(self.on_pushButtonResults_clicked)
 
+        #self.pushButtonContinue = self.findChild(QtWidgets.QPushButton, "pushButtonReturn")
+        #self.pushButtonContinue.clicked.connect(self.on_pushButtonReturn_clicked)
 
         self.pushButtonHelp = self.findChild(QtWidgets.QPushButton, "pushButtonHelp")
         self.pushButtonHelp.clicked.connect(self.on_pushButtonHelp_clicked)
 
+        #self.pushButtonDone = self.findChild(QtWidgets.QPushButton, "pushButtonDone")
+        #self.pushButtonDone.clicked.connect(self.on_pushButtonDone_clicked)
+
         self.show()
         self.loadCsv(self.fileName)
-
-    # class help(QtWidgets.QDialog):
-    #     def __other__(self, fileName):
-    #         super(help, self).__other__() # Call the inherited classes __init__ method
-
-
 
     def loadCsv(self, fileName):
         with open(fileName, "r") as fileInput:
@@ -69,20 +68,17 @@ class Ui(QtWidgets.QMainWindow):
 
     def on_pushButtonResults_clicked(self):
         # uic.hide('table_test.ui', self)
-            uic.loadUi('tab3.ui', self)
-
-
+        uic.loadUi('tab3.ui', self)
 
     def on_pushButtonDone_clicked(self):
-        uic.hide('help.ui', self)
+        #uic.hide('help.ui', self)
         uic.loadUi('table_test_OG.ui', self)
+
+    #def on_pushButtonReturn_clicked(self):
     
     def on_pushButtonHelp_clicked(self):
-        # uic.hide('table_test.ui', self)
+        #uic.hide('table_test.ui', self)
         uic.loadUi('help.ui', self)
-
-        self.pushButtonDone = self.findChild(QtWidgets.QPushButton, "pushButtonDone")
-        self.pushButtonDone.clicked.connect(self.on_pushButtonDone_clicked)
 
 
 app = QtWidgets.QApplication(sys.argv) # Create an instance of QtWidgets.QApplication
