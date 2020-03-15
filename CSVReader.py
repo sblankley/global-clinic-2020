@@ -18,6 +18,7 @@ from math import ceil #ceil used in finding number of workers and in humanCap
 from math import isnan #used in several functions to check if certain values are not numbers
 
 df = pd.read_csv('CM1100Header.csv', skiprows =1) #reads in the CSV file you're going to work with and gets rid of the title row
+#df.dropna = df  #check to see if this actually does what i want it to do 
 df.columns = df.columns.str.strip().str.lower().str.replace('[^a-zA-Z]', '') # only keeps the characters that are letters
 
 #original method of renaming the columns, proved to be more limiting since the columns needed to be in exactly the same order as original CSV template
@@ -73,3 +74,20 @@ for i in range(numJobs):
 # humanCap = ceil(max(cycleTimehuman(jobIsComputer,cycleTime))/takt)  # maximum number of human workers allowed at each workstation
 #                                                                     # is equal to number of human workers
 #                                                                     # needed to complete the longest human task
+
+
+
+
+
+thisdict =	{}
+
+
+print(thisdict)
+
+cycleTime = [5, 5, 10]
+
+for i in range(len(cycleTime)):
+
+	thisdict[i] = cycleTime[i]
+    
+print(thisdict)    
