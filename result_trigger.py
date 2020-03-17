@@ -75,8 +75,8 @@ def translate_to_csv():
     jobDist = result[1] # distribution of tasks amongst stations, equivalent to "ifJobAtStation" above
     opList = []
     #opDist = opDist.tolist() # strip dtype from end of opDist
-    print(opDist)
-    print(jobDist)
+    #print(opDist)
+    #print(jobDist)
 
     # Loop to Populate Workers from "x"
     num_ops = len(opDist)         # number of different types of workers
@@ -129,17 +129,6 @@ def translate_to_csv():
     num_ops = 2
     num_stations = 3
     
-    # convert to strings
-    #workers_assigned = [[0.0], [1.0], [1.0], [0.0], [2.0], [0.0]]
-    
-    workers_assigned = 
-
-    for index in range(0,len(opList)):
-        for sub_val in range(0,len(opList[index])):
-            workers_assigned.append(str(opList[index][sub_val]))
-
-    stations_assigned = [[], [1, 2], [3]]
-
     with open('pLineOpt.csv', 'w', newline='') as csvfile:
         fieldnames = ['Station', 'Tasks', 'Human Ops.', 'Computer Ops.']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)

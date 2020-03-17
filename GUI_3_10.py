@@ -182,11 +182,12 @@ class Controller:
     
     def wait_for_results(self):
         self.wait = WaitWindow()
-        self.wait.done.connect(self.show_results)
+        #self.wait.done.connect(self.show_results)
         self.wait.show()
         # result_trigger.run_optimization()
         # result_trigger.translate_to_csv()
-
+        self.wait.hide()
+        self.results.show()
 
     def show_results(self):
         result_trigger.run_optimization()

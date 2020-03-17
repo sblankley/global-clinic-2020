@@ -1,0 +1,13 @@
+,,,Task Optimization,,,,,Layout,
+Process (#),Process (Name),Cycle Time (s),Automated (Y/N),Capacity (# of ports),Immediate Predecessor (# from Col. 1),Takt Time,,X Distance (m),Y Distance (m)
+1,Unpack,10,N,N/A,,5,,100,100
+2,Cosmetic Check,20,N,N/A,1,-,,200,200
+3,Functional Test,30,Y,2,2,-,,300,300
+4,Package,40,N,N/A,3,-,,400,400
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,Name of data file:,,,,,,,
