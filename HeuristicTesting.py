@@ -15,9 +15,11 @@ while j < numJobs:  #continue filling until all jobs are assigned
             t = TYPE            # figure out what type job j is 
         else: 
             pass
-    numWorkers[t][s] = ceil (cycleTime[j]/takt)  # assign appropriate number of workers to perform job j 
+    numWorkers[t][s] += ceil (cycleTime[j]/takt)  # assign appropriate number of workers to perform job j 
     if cycleTime[j] <= takt:  #check to see if station can take on another job - THIS IS THE PART THATS INCORRECT 
         j += 1                #if yes, add next job to current station 
     else:
         j += 1                #if no, go onto next job and next station 
         s += 1
+print(ifJobAtStation)
+print(numWorkers)
