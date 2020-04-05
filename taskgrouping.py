@@ -1,78 +1,70 @@
-from gekko import GEKKO
-from math import ceil 
-from CSVReader import *
-m = GEKKO()           # create GEKKO model
+from pulp import *
+# change solver to cplex
+from csvReader import *
+import pandas as pd #install using pip install pandas, necessary to translate CSV into a dataframe we can work with
+from math import ceil #ceil used in finding number of workers and in humanCap
+from math import isnan #used in several functions to check if certain values are not numbers
 
+prob = LpProblem("Assignment Problem",LpMinimize)
 
 # DECISION VARIABLES
-# x is true if job j is assigned to workstation w
-x = m.Array(m.Var,(workers,jobs,stations),lb=0,ub=1,integer=True)
-ifJobAtStation = m.Array(m.Var,(jobs,stations),lb=0,ub=1,integer=True)
-ifWorkerAtStation = m.Array(m.Var,(workers,stations),lb=0,ub=1,integer=True)
-ifWorkerAtJob = m.Array(m.Var,(workers,jobs),lb=0,ub=1,integer=True)
-# numOps is number of operators at workstation w
-numWorkersAssigned = m.Array(m.Var,(stations),lb=0,integer=True)
-# # can give a warm start by providing initial values
-# for w in range(workers):
-#     for j in range(jobs):
-#         for s in range(stations):
-#             if (w==j):
-#             x[j,w].value = 1
-#     numOps[w,0].value = 1
+numWorkers = LpVariable.dicts(name="numWorkers", indexs=(types,stations), lowBound=0, cat=LpInteger)
+ifJobAtStation = LpVariable.dicts(name="ifJobAtStation",indexs=(range(numJobs),stations), cat=LpBinary)
 
-# OBJECTIVE FUNCTION
-m.Obj(sum(numWorkersAssigned[s] for s in range(stations)))
+# OBJECTIVE
+prob += lpSum(numWorkers[0][s] for s in stations) # total number of human operators
 
 # CONSTRAINTS
-
-for j in range(jobs):
-    for s in range(stations):
-        m.Equation(sum(x[w,j,s] for w in range(workers)) >= 1 - M * (1-ifJobAtStation[j,s]))
-        m.Equation(sum(x[w,j,s] for w in range(workers)) <= 0.5 + M * ifJobAtStation[j,s])
-
-for w in range(workers):
-    for s in range(stations):
-        m.Equation(sum(x[w,j,s] for j in range(jobs)) >= 1 - M * (1-ifWorkerAtStation[w,s]))
-        m.Equation(sum(x[w,j,s] for j in range(jobs)) <= 0.5 + M * ifWorkerAtStation[w,s])
-
-for w in range(workers):
-    for j in range(jobs):
-        m.Equation(sum(x[w,j,s] for s in range(stations)) >= 1 - M * (1-ifWorkerAtJob[w,j]))
-        m.Equation(sum(x[w,j,s] for s in range(stations)) <= 0.5 + M * ifWorkerAtJob[w,j])
-
 # assign each job to exactly one workstation
-for j in range(jobs):
-    m.Equation(sum(ifJobAtStation[j,s] for s in range(stations)) == 1)
-# assign each worker to at max one workstation
-for w in range(workers):
-    m.Equation(sum(ifWorkerAtStation[w,s] for s in range(stations)) <= 1)
-# each workstation has enough operators to complete assigned jobs under takt time
-for s in range(stations):
-    m.Equation(sum(ifJobAtStation[j,s]*cycleTime[j] for j in range(jobs)) <=takt*numWorkersAssigned[s])
-# link workers at stations
-for s in range(stations):
-    m.Equation(sum(ifWorkerAtStation[w,s] for w in range(workers)) == numWorkersAssigned[s])
-# qualified workers
-for w in range(workers):
-    for j in range(jobs):
-        m.Equation(ifWorkerAtJob[w,j] <= ifQual[w][j])
-# keep from overcrowding
-for s in range(stations):
-    m.Equation(sum(sum(x[w,j,s] * (1-jobIsComputer[j]) for j in range(jobs)) for w in range(workers)) <= humanCap)
-
-for j1 in range(jobs):
-    for j2 in range(jobs):
-        for s2 in range(stations):
-            m.Equation(ifJobAtStation[j2,s2]*pred[j1][j2] <= sum(ifJobAtStation[j1,s1] for s1 in range(s2)))
+for t in types:
+    for j in jobs[t]:
+        prob += lpSum(ifJobAtStation[j][s] for s in stations) == 1
+# no workers of type t if no jobs of type t assigned
+for s in stations:
+    for t in types:
+        prob += numWorkers[t][s] <= lpSum(ifJobAtStation[j][s] for j in jobs[t]) * M
+# station has capacity to complete assignments under takt time
+for s in stations:
+    for t in types:
+        prob += lpSum(ifJobAtStation[j][s]*cycleTime[j] for j in jobs[t]) <= takt * numWorkers[t][s]
+# no overcrowding of human operators
+for s in stations:
+    for t in types:
+        prob += numWorkers[t][s] <= cap[t]
+# precedence
+for s in stations:
+    for t in types:
+        for j in jobs[t]:
+            for g in pred[j]:
+                prob += ifJobAtStation[j][s] <= lpSum(ifJobAtStation[g][k] for k in range(s+1))
+# no unmanned stations - only use for larger datasets
+# for s in stations:
+#     prob += lpSum(numWorkers[(t,s)] for t in compTypes) <= numWorkers[(0,s)] * M
 
 # SOLVE
-m.options.SOLVER=1    # change solver (1=APOPT,3=IPOPT)
-m.solve(disp=True)
+prob.solve()
+for s in stations:
+    print("Station %s:" % (s))
+    for j in range(numJobs):
+        if (value(ifJobAtStation[j][s]) != 0):
+            print ("ifJobAtStation(%s,%s)=%s" % (j,s,value(ifJobAtStation[j][s])))
+    for t in types:
+        if (value(numWorkers[t][s]) != 0):
+            print ("numWorkers(%s,%s)=%s" % (t,s,value(numWorkers[t][s])))
 
-print('x:'+str(x))
-print('ifJobAtStation:'+str(ifJobAtStation))
-print('ifWorkerAtStation:'+str(ifWorkerAtStation))
-print('ifWorkerAtJob:'+str(ifWorkerAtJob))
-print('numWorkersAssigned:'+str(numWorkersAssigned))
 
+# for s in stations:
+#     print ("Station ", s, " is assigned: ",)
+#     print ([j for j in range(numJobs) if ifJobAtStation[j][s].varValue == 1])
+    # print [j for j in types if numWorkers[(t,s)]]
 
+# print('numWorkers:'+str(numWorkers))
+# print('ifJobAtStation:'+str(ifJobAtStation))
+# output = []
+# for s in stations:
+#     if numWorkers[t,s]
+#     output += []
+
+# csv.writer(csvfile, dialect='excel', **fmtparams)
+# spamwriter.writerow(['Spam'] * 5 + ['Baked Beans'])
+#     spamwriter.writerow(['Spam', 'Lovely Spam', 'Wonderful Spam'])
