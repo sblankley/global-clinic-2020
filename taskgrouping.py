@@ -1,6 +1,6 @@
 from pulp import *
 # change solver to cplex
-from csvReader import *
+from CSVReader import *
 import pandas as pd #install using pip install pandas, necessary to translate CSV into a dataframe we can work with
 from math import ceil #ceil used in finding number of workers and in humanCap
 from math import isnan #used in several functions to check if certain values are not numbers
@@ -60,15 +60,13 @@ for s in stations:
 # eliminate null stations
 new_out = {}
 check = 0.0
-newstation=0
 
 for s in stations:
     for j in range(numJobs):
         check += value(ifJobAtStation[j][s])
         #print(check)
     if (check != 0.0):
-        new_out[newstation] = ifJobAtStation[s]
-        newstation += 1
+        new_out[s] = ifJobAtStation[s]
         print('\nadded non-zero station!')
     check = 0.0
 
@@ -77,39 +75,59 @@ print(new_out)
 
 # Format Optimization Output for CSVWrite
 
-real_stations = len(new_out)
+keys = new_out.keys()
+real_stations = list(keys)
+num_real_stations = len(real_stations)
 
+check = {}
+for s in range(0,num_real_stations):
+    index = real_stations[s]
+    check[s] = new_out[index]
+
+print(check)
+
+## make new station and operator dictionaries for writing
 task_dist = []
-for station_index in range(0,real_stations):
+for station_index in real_stations:
     task_dist.append([])
 print('task_dist is', task_dist)
 
-
 op_dist = []
-for ops in types:
+
+for station_index in range(0,num_real_stations):
     op_dist.append([])
+    for ops in types:
+        op_dist[station_index].append([])
 print('op_dist is', op_dist)
 
-for s in range(0,real_stations):
+index = 0
+## Add condensed format to new dictionaries
+for s in real_stations:
     print("\nStation %s:" % (s))
     for j in range(numJobs):
         if (value(ifJobAtStation[j][s]) != 0):
-           task_dist[s].append(j)
-           print('task_dist is', task_dist)
-
+            task_dist[index].append(j)
+            print('task_dist is', task_dist)
+    
     for t in types:
         if (value(numWorkers[t][s]) != 0):
             op = value(numWorkers[t][s])
-            op_dist[t].append(op)
+            op_dist[index][t] = op
             print('op_dist is', op_dist)
 
+        else:
+            op_dist[index][t] = 0.0
+            print('op_dist is', op_dist)
+
+    index += 1
 # CSVWrite
 
 ## create fieldnames for CSVwrite, add the proper number of computer operators, indicated by capacity
 column_names = ['Station', 'Tasks', 'Human Ops.']
+comp_names = []
 for comp_ops in (types[1:]):
-    column_names.append('Comp. Ops. (Cap=' + str(value(cap[comp_ops])) + ')')
-
+    comp_names.append('Comp. Ops. (Cap=' + str(value(cap[comp_ops])) + ')')
+column_names.extend(comp_names)
 
 ## Use csv.DictWriter to format csv output and write to specified csv file
 
@@ -121,19 +139,20 @@ with open('pLineOpt.csv', 'w', newline='') as csvfile:
 ## Create row format and write to CSV
 
     row_dict = {}
-    count = 0
-
-    for s in range(0,real_stations):
+    count = len(types) - 1
+    num = 0
+    for s in range(0,num_real_stations):
         for name in fieldnames:
             if name == 'Station':
-                row_dict[name] = str(s+1)
+                row_dict[name] = str(num+1)
+                num += 1
             elif name == 'Tasks':
                 row_dict[name] = task_dist[s]
             elif name == 'Human Ops.':
-                row_dict[name] = op_dist[0]
-            else:
-                
-                for ops in range(1,(len(op_dist))):
-                    row_dict[name] = op_dist[ops]   
+                row_dict[name] = op_dist[0][0]
+            else:        
+                for comp_name in comp_names:
+                    ps = comp_names.index(comp_name)
+                    row_dict[comp_name] = op_dist[s][ps+1]
         print('row_dict is', row_dict)
         writer.writerow( row_dict )
