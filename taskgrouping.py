@@ -1,6 +1,6 @@
 from pulp import *
 # change solver to cplex
-from CSVReader import *
+from csvReader import *
 import pandas as pd #install using pip install pandas, necessary to translate CSV into a dataframe we can work with
 from math import ceil #ceil used in finding number of workers and in humanCap
 from math import isnan #used in several functions to check if certain values are not numbers
@@ -60,13 +60,15 @@ for s in stations:
 # eliminate null stations
 new_out = {}
 check = 0.0
+newstation=0
 
 for s in stations:
     for j in range(numJobs):
         check += value(ifJobAtStation[j][s])
         #print(check)
     if (check != 0.0):
-        new_out[s] = ifJobAtStation[s]
+        new_out[newstation] = ifJobAtStation[s]
+        newstation += 1
         print('\nadded non-zero station!')
     check = 0.0
 
