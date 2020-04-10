@@ -10,6 +10,11 @@ operators = {}
 for i in range(real_stations): # this should actually be indexed over types
     operators[i] = op_dist[i]
 
+jobs #dict with type as keys and jobs as values, from csv reader 
+x # dict with jobs as keys as length as values, from csv reader
+y # dict with jobs as keys and widths as values, from csv reader
+ 
+
 # NEED THE FOLLOWING:
 # dict with jobs as keys as length as values
 # dict with jobs as keys and widths as values

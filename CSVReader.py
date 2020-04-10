@@ -49,3 +49,16 @@ jobs = {}
 for i in range(numTypes):
     jobs[i] = Jobs[i]
     cap[i] = Cap[i]
+
+#list of x and y distances 
+xdist = []
+ydist = []
+for i in range(len(df.xdistancem)):  #would there ever be a situation where x distance != y distances input
+    xdist.append(df.xdistancem[i])
+    ydist.append(df.ydistancem[i])
+#dictionaries from those lists 
+x = {}
+y = {}
+for i in range(len(xdist)): 
+    x[i] = xdist[i]
+    y[i] = ydist[i]
