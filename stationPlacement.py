@@ -3,16 +3,16 @@ from taskgrouping import *
 # import results csv
 
 tasks =	{}
-for i in range(real_stations):
+for i in range(len(real_stations)):
 	tasks[i] = task_dist[i]
 
 operators = {}
-for i in range(real_stations): # this should actually be indexed over types
+for i in range(len(real_stations)): # this should actually be indexed over types
     operators[i] = op_dist[i]
 
-jobs #dict with type as keys and jobs as values, from csv reader 
-x # dict with jobs as keys as length as values, from csv reader
-y # dict with jobs as keys and widths as values, from csv reader
+#uncomment these lines for CSVs with size data 
+#x # dict with jobs as keys as length as values, from csv reader
+#y # dict with jobs as keys and widths as values, from csv reader
  
 
 # NEED THE FOLLOWING:

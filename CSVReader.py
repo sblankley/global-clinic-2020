@@ -1,7 +1,7 @@
 # This script converts the csv data into dictionaries as inputs for the PuLP model
 
 import pandas as pd #install using pip install pandas, necessary to translate CSV into a dataframe we can work with
-df = pd.read_csv('HeaderInput.csv', skiprows =1) #reads in the CSV file you're going to work with and gets rid of the title row
+df = pd.read_csv('CM1100Header.csv', skiprows =1) #reads in the CSV file you're going to work with and gets rid of the title row
 df.columns = df.columns.str.strip().str.lower().str.replace('[^a-zA-Z]', '') # only keeps the characters that are letters
 
 M = 100 #a "big" number necessary for setting upper and lower bounds of certain constraints in the math model
@@ -50,15 +50,16 @@ for i in range(numTypes):
     jobs[i] = Jobs[i]
     cap[i] = Cap[i]
 
-#list of x and y distances 
-xdist = []
-ydist = []
-for i in range(len(df.xdistancem)):  #would there ever be a situation where x distance != y distances input
-    xdist.append(df.xdistancem[i])
-    ydist.append(df.ydistancem[i])
-#dictionaries from those lists 
-x = {}
-y = {}
-for i in range(len(xdist)): 
-    x[i] = xdist[i]
-    y[i] = ydist[i]
+#Uncomment these lines for CSVs with sizing data 
+# #list of x and y distances 
+# xdist = []
+# ydist = []
+# for i in range(len(df.xdistancem)):  #would there ever be a situation where x distance != y distances input
+#     xdist.append(df.xdistancem[i])
+#     ydist.append(df.ydistancem[i])
+# #dictionaries from those lists 
+# x = {}
+# y = {}
+# for i in range(len(xdist)): 
+#     x[i] = xdist[i]
+#     y[i] = ydist[i]
