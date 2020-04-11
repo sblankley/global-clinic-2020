@@ -1,0 +1,21 @@
+,,Task Optimization,,,,,Station Placement ,
+Process (#),Process (Name),Cycle Time (s),Automated (Y/N),Capacity (# of ports),Immediate Predecessor (# from Col. 1),Takt,Length (m),Width (m)
+1,unpack,24,n,,,480,1,9
+2,receive,18,Y,4,1,,2,8
+3,transport to wnlite,10,N,,2,,3,7
+4,pack,10,n,,3,,4,6
+5,wnlite,90,n,,4,,5,5
+6,ri,8,y,4,5,,6,4
+7,fus,60,n,,6,,7,3
+8,labels,35,n,,7,,8,2
+9,burn mac,31,y,4,8,,9,1
+10,reset portal,9,y,10,9,,1,9
+11,wn functional,20,y,8,10,,2,8
+12,reset m/ clean,118,n,,11,,3,7
+13,pot reset,8,y,8,12,,4,6
+14,qc,60,n,,13,,5,5
+15,fotos,92,n,,14,,6,4
+16,pack,60,n,,15,,7,3
+17,bin,10,n,,16,,8,2
+18,pack,60,n,,17,,9,1
+19,ooba,180,n,,18,,1,9

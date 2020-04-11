@@ -10,9 +10,13 @@ operators = {}
 for i in range(len(real_stations)): # this should actually be indexed over types
     operators[i] = op_dist[i]
 
+types  #original dictionary with types as keys as jobs as values from csv reader
+
 #uncomment these lines for CSVs with size data 
-#x # dict with jobs as keys as length as values, from csv reader
-#y # dict with jobs as keys and widths as values, from csv reader
+length # dict with jobs as keys as length as values, from csv reader
+width # dict with jobs as keys and widths as values, from csv reader
+
+saved
  
 
 # NEED THE FOLLOWING:
@@ -28,10 +32,13 @@ for i in range(len(real_stations)): # this should actually be indexed over types
 # some computer jobs MUST be all next to each other -- will contemplate that
 
 # for each newstation
-# for s in range(newstations):
+for s in range(len(real_stations)):
     # initialize temp demensions
+    temp = [] 
     # for each type
+    #for t in range(len(op_dist[0])):
         # get max length and width of the assigned tasks
+        
         # if number of operators is greater than one
             # take number of operators and divide by two
             # temp will add that # times the length total length, and twice the width
@@ -47,5 +54,4 @@ for i in range(len(real_stations)): # this should actually be indexed over types
 # for each newstation s (minus the last one)
     # offset += the length of the newstation + buffer
     # stationCorner[s+1] = offset
-
 # now for each station we should have a length, width, x of bottom left, y of bottom left
