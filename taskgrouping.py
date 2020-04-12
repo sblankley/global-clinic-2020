@@ -126,7 +126,7 @@ for s in real_stations:
 column_names = ['Station', 'Tasks', 'Human Ops.']
 comp_names = []
 for comp_ops in (types[1:]):
-    comp_names.append('Comp. Ops. (Cap=' + str(value(cap[comp_ops])) + ')')
+    comp_names.append('Comp. Ops. Type ' + str(comp_ops) + ' (Cap=' + str(value(cap[comp_ops])) + ')')
 column_names.extend(comp_names)
 
 ## Use csv.DictWriter to format csv output and write to specified csv file
@@ -138,10 +138,12 @@ with open('pLineOpt.csv', 'w', newline='') as csvfile:
 
 ## Create row format and write to CSV
 
-    row_dict = {}
+    # row_dict = {}
     count = len(types) - 1
     num = 0
+    saved = [[] for i in range (0,num_real_stations)]
     for s in range(0,num_real_stations):
+        row_dict = {}
         for name in fieldnames:
             if name == 'Station':
                 row_dict[name] = str(num+1)
@@ -155,4 +157,5 @@ with open('pLineOpt.csv', 'w', newline='') as csvfile:
                     ps = comp_names.index(comp_name)
                     row_dict[comp_name] = op_dist[s][ps+1]
         print('row_dict is', row_dict)
+        saved[s] = row_dict
         writer.writerow( row_dict )

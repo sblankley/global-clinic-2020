@@ -14,8 +14,8 @@ cycletime = []
 for i in range(numJobs):
     cycletime.append(df.cycletimes[i]) #create list of cycle times
     if df.automatedyn[i] == 'Y' or df.automatedyn[i] == 'y': # check for computer jobs to create capacitity list
-        if df.capacityofports[i] not in Cap[1:]:  #check if the capacity has not been added before, and disregard human cap value
-            Cap.append(int(df.capacityofports[i]))  #add capcacity of each type of computer job
+        #if df.capacityofports[i] not in Cap[1:]:  #check if the capacity has not been added before, and disregard human cap value
+        Cap.append(int(df.capacityofports[i]))  #add capcacity of each type of computer job
 numTypes = len(Cap)
 # create list of types and computer types, list of stations
 types = list(range(0,numTypes))

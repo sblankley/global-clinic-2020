@@ -42,10 +42,8 @@ width # dict with jobs as keys and widths as values, from csv reader
 placement = [[] for i in range(len(real_stations))]
 # for each newstation
 for s in range(len(real_stations)):
-    # initialize temp demensions
     temp = []
-    # for each type
-    for t in types:
+	 for t in types:
 		maxLength = 0
 		maxWidth = 0
 		for j in assignedJobs[s][t]:
@@ -53,26 +51,34 @@ for s in range(len(real_stations)):
 				maxLength = length[j]
 			if (width[j] > maxWidth):
 				maxWidth = width[j]
-        # if number of operators is greater than one
-		if (op_dist[s][t] > 1):
+        # if number of operators is greater than one and is a human
+		if (op_dist[s][t] > 1) and (t==0):
             # take number of operators and divide by two
             # temp will add that # times the length total length, and twice the width
 			temp[0] += ceil(op_dist[s][t]/2)*maxLength
 			temp[1] += 2*maxWidth
+		elif (t!=0):
+    			temp[0] += op_dist[s][t]*maxLength
         # else (if number of operators is one or zero)
 		else:
             # temp will add that length and that width
 			temp[0] += maxLength
 			temp[1] += maxWidth
     # station gets dimensions of temp
-	placement[s] = temp
+	placement[s][0] = temp[0]
+	placement[s][1] = temp[1]
 
 # now we also want the bottom left corner of each new station in a line
-# assigne a buffer space between stations
+# assign a spacer between stations
 
-# stationCorner[0] = [0, 0]
-# offset = 0
+placement[0][3] = 0
+placement[0][4] = -placement[0][1]/2
+spacer = 1
+offset = 0
 # for each newstation s (minus the last one)
-    # offset += the length of the newstation + buffer
-    # stationCorner[s+1] = offset
-# now for each station we should have a length, width, x of bottom left, y of bottom left
+for s in range(len(real_stations)-1):
+    # offset += the length of the newstation + spacer
+	offset += placement[s][0]
+    placement[s+1][2] = offset
+	placement[s+1][3] = -placement[s+1][1]/2
+# placement is x of bottom left, y of bottom left, length, width
