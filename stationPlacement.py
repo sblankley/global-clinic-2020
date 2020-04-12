@@ -42,8 +42,8 @@ width # dict with jobs as keys and widths as values, from csv reader
 placement = [[] for i in range(len(real_stations))]
 # for each newstation
 for s in range(len(real_stations)):
-    temp = []
-	 for t in types:
+	temp = []
+	for t in types:
 		maxLength = 0
 		maxWidth = 0
 		for j in assignedJobs[s][t]:
@@ -79,6 +79,6 @@ offset = 0
 for s in range(len(real_stations)-1):
     # offset += the length of the newstation + spacer
 	offset += placement[s][0]
-    placement[s+1][2] = offset
+	placement[s+1][2] = offset
 	placement[s+1][3] = -placement[s+1][1]/2
 # placement is x of bottom left, y of bottom left, length, width
