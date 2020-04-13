@@ -44,17 +44,16 @@ placement = [[0,0,0,0] for i in range(len(real_stations))]
 for s in range(len(real_stations)):
 	currLength = 0
 	currWidth = 0
-	maxLength = 0
-	maxWidth = 0
 	for t in types[1:]:
-    	# currLength += op_dist[s][t]*maxLength # uncomment this line if reducing ports from full capacity
-		currLength += cap[t]*maxLength
-		if (width[jobs[t][0]] > currWidth):
-    			currWidth = maxWidth
+		if (len(assignedJobs[s][t])!=0):
+    		# currLength += op_dist[s][t]*length[jobs[t][0]] # uncomment this line if reducing ports from full capacity
+			currLength += cap[t]*length[jobs[t][0]]
+			if (width[jobs[t][0]] > currWidth):
+    				currWidth = width[jobs[t][0]]
 	# now let's handle human jobs -- we can combine space if consecutive
 	lastJob = -1
-	#maxLength = 0
-	#maxWidth = 0
+	maxLength = 0
+	maxWidth = 0
 	index = 0
 	while (index < len(assignedJobs[s][0])):
 		maxLength = 0
@@ -74,7 +73,7 @@ for s in range(len(real_stations)):
 			currLength += maxLength
 			if (maxWidth > currWidth):
 				currWidth = maxWidth	
-		lastJob = assignedJobs[s][0][index-1]
+		lastJob = assignedJobs[s][0][index]
 		index += 1
 	placement[s][0] = currLength
 	placement[s][1] = currWidth
