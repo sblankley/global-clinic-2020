@@ -49,7 +49,8 @@ prob.solve()
 # OUTPUT MGMT
 
 for s in stations:
-    print("\nStation %s:" % (s))
+    if (sum(value(ifJobAtStation[j][s]) for j in range(numJobs))!=0):
+        print("\nStation %s:" % (s))
     for j in range(numJobs):
         if (value(ifJobAtStation[j][s]) != 0):
             print ("ifJobAtStation(%s,%s)=%s" % (j,s,value(ifJobAtStation[j][s])))
@@ -67,11 +68,11 @@ for s in stations:
         #print(check)
     if (check != 0.0):
         new_out[s] = ifJobAtStation[s]
-        print('\nadded non-zero station!')
+        # print('\nadded non-zero station!')
     check = 0.0
 
-print('\n')
-print(new_out)
+# print('\n')
+# print(new_out)
 
 # Format Optimization Output for CSVWrite
 
@@ -84,13 +85,13 @@ for s in range(0,num_real_stations):
     index = real_stations[s]
     check[s] = new_out[index]
 
-print(check)
+#print(check)
 
 ## make new station and operator dictionaries for writing
 task_dist = []
 for station_index in real_stations:
     task_dist.append([])
-print('task_dist is', task_dist)
+#print('task_dist is', task_dist)
 
 op_dist = []
 
@@ -98,26 +99,26 @@ for station_index in range(0,num_real_stations):
     op_dist.append([])
     for ops in types:
         op_dist[station_index].append([])
-print('op_dist is', op_dist)
+# print('op_dist is', op_dist)
 
 index = 0
 ## Add condensed format to new dictionaries
 for s in real_stations:
-    print("\nStation %s:" % (s))
+    # print("\nStation %s:" % (s))
     for j in range(numJobs):
         if (value(ifJobAtStation[j][s]) != 0):
             task_dist[index].append(j)
-            print('task_dist is', task_dist)
+            # print('task_dist is', task_dist)
     
     for t in types:
         if (value(numWorkers[t][s]) != 0):
             op = value(numWorkers[t][s])
             op_dist[index][t] = op
-            print('op_dist is', op_dist)
+            # print('op_dist is', op_dist)
 
         else:
             op_dist[index][t] = 0.0
-            print('op_dist is', op_dist)
+            # print('op_dist is', op_dist)
 
     index += 1
 # CSVWrite
@@ -156,6 +157,6 @@ with open('pLineOpt.csv', 'w', newline='') as csvfile:
                 for comp_name in comp_names:
                     ps = comp_names.index(comp_name)
                     row_dict[comp_name] = op_dist[s][ps+1]
-        print('row_dict is', row_dict)
+        # print('row_dict is', row_dict)
         saved[s] = row_dict
         writer.writerow( row_dict )

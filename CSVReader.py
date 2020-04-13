@@ -23,11 +23,13 @@ compTypes = list(range(1,numTypes))
 stations = list(range(0,numStations))
 # create list of jobs that are of each type
 Jobs = [ [] for i in range(numTypes) ]
+compCounter = 0
 for i in range(numJobs):
     if df.automatedyn[i] == 'Y' or df.automatedyn[i] == 'y': # check for computer jobs
-        for j in range(numTypes-1):
-            if df.capacityofports[i] == Cap[j+1]:   #the +1/ -1 indices are to skip over the first value (human) in capacity
-                Jobs[j+1].append(i)
+        compCounter += 1
+        # for j in range(numTypes-1):
+        #     if df.capacityofports[i] == Cap[j+1]:   #the +1/ -1 indices are to skip over the first value (human) in capacity
+        Jobs[compCounter].append(i)
     else:
         Jobs[0].append(i)
 #create list of pred
