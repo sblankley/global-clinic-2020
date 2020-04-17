@@ -9,10 +9,12 @@ takt = df.takt[0] #the takt time is equal to the only value entered in the takt 
 # count number of jobs to get numJobs and numStations
 numJobs = len(df.process)
 numStations = numJobs
-Cap = [4] # start with max number of human operators at a station, will later pull directly from the CSV like takt time
+Cap = [1] # start with max number of human operators at a station, will later pull directly from the CSV like takt time
 cycletime = []
+jobnames = []
 for i in range(numJobs):
     cycletime.append(df.cycletimes[i]) #create list of cycle times
+    jobnames.append(df.processname[i]) #create list of job names
     if df.automatedyn[i] == 'Y' or df.automatedyn[i] == 'y': # check for computer jobs to create capacitity list
         #if df.capacityofports[i] not in Cap[1:]:  #check if the capacity has not been added before, and disregard human cap value
         Cap.append(int(df.capacityofports[i]))  #add capcacity of each type of computer job
@@ -44,6 +46,10 @@ for i in range(numJobs):
 cycleTime =	{}
 for i in range(len(cycletime)):
 	cycleTime[i] = cycletime[i]
+#job names dictionary - keys: job index, values: job name (strings)
+jobNames = {}
+for i in range(len(jobnames)):
+    jobNames[i] = jobnames[i]
 # capacity dictionary - keys: job type, values: capacity value, arbirary value assigned to human job
 #job dictionary - keys: job type, values: jobs of that type
 cap =	{}
@@ -51,7 +57,6 @@ jobs = {}
 for i in range(numTypes):
     jobs[i] = Jobs[i]
     cap[i] = Cap[i]
-
 #Uncomment these lines for CSVs with sizing data 
 #list of x and y distances 
 lengthdist = []

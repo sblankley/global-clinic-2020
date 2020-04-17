@@ -107,7 +107,7 @@ for s in real_stations:
     # print("\nStation %s:" % (s))
     for j in range(numJobs):
         if (value(ifJobAtStation[j][s]) != 0):
-            task_dist[index].append(j)
+            task_dist[index].append(jobNames[j])
             # print('task_dist is', task_dist)
     
     for t in types:
@@ -121,8 +121,8 @@ for s in real_stations:
             # print('op_dist is', op_dist)
 
     index += 1
-# CSVWrite
 
+# CSVWrite
 ## create fieldnames for CSVwrite, add the proper number of computer operators, indicated by capacity
 column_names = ['Station', 'Tasks', 'Human Ops.']
 comp_names = []
@@ -150,7 +150,8 @@ with open('pLineOpt.csv', 'w', newline='') as csvfile:
                 row_dict[name] = str(num+1)
                 num += 1
             elif name == 'Tasks':
-                row_dict[name] = task_dist[s]
+                string = str(task_dist[s])[1:-1] 
+                row_dict[name] = string
             elif name == 'Human Ops.':
                 row_dict[name] = op_dist[0][0]
             else:        
