@@ -5,7 +5,7 @@ from taskgrouping import *
 # dict with new stations as keys and jobs as values
 tasks =	{}
 for i in range(len(real_stations)):
-	tasks[i] = task_dist[i]
+	tasks[i] = task_Dist[i]
 
 operators = {}
 for i in range(len(real_stations)):
@@ -55,7 +55,7 @@ for s in range(len(real_stations)):
 	maxLength = 0
 	maxWidth = 0
 	index = 0
-	while (index < len(assignedJobs[s][0])):
+	while (index < len(assignedJobs[s][0])-1):
 		maxLength = 0
 		maxWidth = 0
 		while (assignedJobs[s][0][index]==lastJob+1):

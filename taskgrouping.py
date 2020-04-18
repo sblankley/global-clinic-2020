@@ -89,8 +89,10 @@ for s in range(0,num_real_stations):
 
 ## make new station and operator dictionaries for writing
 task_dist = []
+task_Dist = []
 for station_index in real_stations:
     task_dist.append([])
+    task_Dist.append([])
 #print('task_dist is', task_dist)
 
 op_dist = []
@@ -108,6 +110,7 @@ for s in real_stations:
     for j in range(numJobs):
         if (value(ifJobAtStation[j][s]) != 0):
             task_dist[index].append(jobNames[j])
+            task_Dist[index].append(j)
             # print('task_dist is', task_dist)
     
     for t in types:
@@ -150,8 +153,7 @@ with open('pLineOpt.csv', 'w', newline='') as csvfile:
                 row_dict[name] = str(num+1)
                 num += 1
             elif name == 'Tasks':
-                string = str(task_dist[s])[1:-1] 
-                row_dict[name] = string
+                row_dict[name] = str(task_dist[s])[1:-1]
             elif name == 'Human Ops.':
                 row_dict[name] = op_dist[0][0]
             else:        
