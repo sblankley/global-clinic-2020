@@ -1,5 +1,0 @@
-,,Task Optimization,,,,,,Layout,
-Process (#),Process (Name),Cycle Time (s),Automated (Y/N),Capacity (# of ports),Immediate Predecessor (# from Col. 1),Takt,,X Distance (m),Y Distance (m)
-1,unpack,20,n,,,5,,100,100
-2,functional test,10,Y,2,1,,,200,200
-3,package,5,N,,2,,,300,300
