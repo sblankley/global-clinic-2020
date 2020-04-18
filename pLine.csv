@@ -1,11 +1,5 @@
-﻿,Cycle Time,Changeover,Operators Needed,X Distance,Y Distance
-Process 1,10,5,1,hi,100
-Process 2,20,10,2,200,200
-Process 3,20,15,3,300,300
-Process 4,40,20,4,400,400
-Process 5,50,25,5,500,500
-Process 6,60,30,6,600,600
-Process 7,70,35,7,700,700
-Process 8,80,40,8,800,800
-Process 9,90,45,9,900,900
-Process 10,100,50,10,1000,1000
+Process (#),Process (Name),Cycle Time (s),Automated (Y/N),Capacity (# of ports),Immediate Predecessor (# from Col. 1),Takt Time,X Distance (m),Y Distance (m),Length (m),Width (m)
+1,Unpack,5,N,N/A,,5,100,100,10,2
+2,Cosmetic Check,10,N,N/A,1,-,200,200,8,1
+3,Functional Test,10,Y,2,2,-,300,300,5,3
+4,Package,10,N,N/A,3,-,400,400,6,1
