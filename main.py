@@ -347,8 +347,8 @@ class Canvas(FigureCanvas):
             ax.text(self.cx, self.cy, 'Station %1i' % (s+1), color='k', 
                     ha='center', va='center', weight='bold')
 
-            Xbound = 1.3*maxwidth
-            Ybound = 1.3*maxlen
+            Xbound = 1.2*xgrid+maxwidth
+            Ybound = 2*ygrid+maxlen
             ax.set_xticks(numpy.arange(0, numpy.rint(Xbound), step=numpy.ceil(Xbound/10)))
             ax.set_yticks(numpy.arange(0, numpy.rint(Ybound), step=numpy.ceil(Ybound/10)))
 
@@ -391,7 +391,7 @@ class Controller:
         self.help.close()
 
     def show_results(self):
-        control.run_opt('template.csv')
+        control.run_opt(self.window.fileName)
         self.results = ResultsWindow()
         self.results.load_init() # call this in the defn. to have .csv show on startup
         self.results.helpOpen.connect(self.show_help)

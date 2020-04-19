@@ -130,6 +130,11 @@ def run_stationPl():
 		placement[s+1][3] = -placement[s+1][1]/2 + spacer
 	# placement is length (x), width (y), x of bottom left, y of bottom left
 
+	for s in range(len(real_stations)):
+		for dim in range(4):
+			if placement[s][dim] < 0:
+				placement[s][dim] = abs(placement[s][dim]) + 1
+
 	# global variables
 	settings.myList['placement'] = placement
 

@@ -4,7 +4,6 @@ import pandas as pd #install using pip install pandas, necessary to translate CS
 import settings
 
 def read(fileName):
-    print(fileName)
     df = pd.read_csv(fileName, skiprows =0) #reads in the CSV file you're going to work with and gets rid of the title row
     df.columns = df.columns.str.strip().str.lower().str.replace('[^a-zA-Z]', '') # only keeps the characters that are letters
 
