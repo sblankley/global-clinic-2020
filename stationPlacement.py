@@ -1,4 +1,5 @@
 import settings
+import math
 
 def run_stationPl():
 	# import global variables
@@ -82,8 +83,10 @@ def run_stationPl():
 					maxWidth = width[j]
 				lastJob = j
 				index += 1
+			print(op_dist[s][0])
+			print(op_dist[s][1])
 			if (op_dist[s][0] > 1):
-				currLength += ceil(op_dist[s][0]/2)*maxLength
+				currLength += math.ceil(op_dist[s][0]/2)*maxLength
 				if (2*maxWidth > currWidth):
 					currWidth = 2*maxWidth
 			else:

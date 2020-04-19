@@ -4,7 +4,8 @@ import pandas as pd #install using pip install pandas, necessary to translate CS
 import settings
 
 def read(fileName):
-    df = pd.read_csv('CM1100Header-dims.csv', skiprows =0) #reads in the CSV file you're going to work with and gets rid of the title row
+    print(fileName)
+    df = pd.read_csv(fileName, skiprows =0) #reads in the CSV file you're going to work with and gets rid of the title row
     df.columns = df.columns.str.strip().str.lower().str.replace('[^a-zA-Z]', '') # only keeps the characters that are letters
 
     M = 100 #a "big" number necessary for setting upper and lower bounds of certain constraints in the math model

@@ -1,0 +1,5 @@
+Process (#),Process (Name),Cycle Time (s),Automated (Y/N),Capacity (# of ports),Immediate Predecessor (# from Col. 1),Takt,Length (m),Width (m)
+1,Unpack,5,N,,,5,1.5,2.1
+2,Cosmetic Check,10,N,,1,,3.1,1.1
+3,Functional Test,10,Y,2,2,,1.1,3.4
+4,Package,10,N,,3,,2.6,1.3

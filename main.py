@@ -14,6 +14,7 @@ from matplotlib.figure import Figure
 import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
+import math 
 
 # optimization files
 import stationPlacement, taskgrouping, CSVReader, settings, control 
@@ -71,7 +72,7 @@ class DataWindow(QtWidgets.QMainWindow):
         super(DataWindow, self).__init__() # Call the inherited classes __init__ method
         uic.loadUi('dataWindow.ui', self) # Load the main .ui file
 
-        self.fileName = "CM1100Header-dims.csv" # default input filename
+        self.fileName = "template.csv" # default input filename
         self.model = QtGui.QStandardItemModel(self)
         self.setWindowTitle("HMC Optimization Suite")
         self.setWindowIcon(QIcon('hmc.png'))
@@ -347,9 +348,9 @@ class Canvas(FigureCanvas):
                     ha='center', va='center', weight='bold')
 
             Xbound = 1.3*maxwidth
-            Ybound = ygrid+maxlen*5
-            ax.set_xticks(numpy.arange(0, int(Xbound), step= int(Xbound/10)))
-            ax.set_yticks(numpy.arange(0, Ybound, step=int(2*ygrid)))
+            Ybound = 1.3*maxlen
+            ax.set_xticks(numpy.arange(0, numpy.rint(Xbound), step=numpy.ceil(Xbound/10)))
+            ax.set_yticks(numpy.arange(0, numpy.rint(Ybound), step=numpy.ceil(Ybound/10)))
 
             ax.set_xlabel('X (m)')
             ax.set_ylabel('Y (m)')
@@ -390,7 +391,7 @@ class Controller:
         self.help.close()
 
     def show_results(self):
-        control.run_opt('CM1100Header-dims.csv')
+        control.run_opt('template.csv')
         self.results = ResultsWindow()
         self.results.load_init() # call this in the defn. to have .csv show on startup
         self.results.helpOpen.connect(self.show_help)
