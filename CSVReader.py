@@ -7,7 +7,6 @@ from math import ceil
 def read(fileName):
     df = pd.read_csv(fileName, skiprows =0) #reads in the CSV file you're going to work with and gets rid of the title row
     df.columns = df.columns.str.strip().str.lower().str.replace('[^a-zA-Z]', '') # only keeps the characters that are letters
-
     M = 100 #a "big" number necessary for setting upper and lower bounds of certain constraints in the math model
     takt = df.takts[0] #the takt time is equal to the only value entered in the takt column in the CSV
     # count number of jobs to get numJobs and numStations
@@ -23,7 +22,7 @@ def read(fileName):
             #if df.capacityofports[i] not in Cap[1:]:  #check if the capacity has not been added before, and disregard human cap value
             Cap.append(int(df.capacityofports[i]))  #add capcacity of each type of computer job
     numTypes = len(Cap)
-    #check to make sure manual human cap will not break
+    #check to make sure manual human cap will not cause pulp to split up jobs
     if Cap[0]<ceil(max(cycletime)/takt):
         Cap[0] = int(ceil(max(cycletime)/takt))
     # create list of types and computer types, list of stations
@@ -64,7 +63,6 @@ def read(fileName):
     for i in range(numTypes):
         jobs[i] = Jobs[i]
         cap[i] = Cap[i]
-
     #Uncomment these lines for CSVs with sizing data 
     #list of x and y distances 
     lengthdist = []
@@ -78,8 +76,7 @@ def read(fileName):
     for i in range(len(lengthdist)): 
         length[i] = lengthdist[i]
         width[i] = widthdist[i]
-    
-    set global variables
+    #set global variables
     settings.myList['stations'] = stations
     settings.myList['types'] = types
     settings.myList['jobs'] = jobs
