@@ -132,7 +132,7 @@ def group():
     column_names = ['Station', 'Tasks', 'Human Ops.']
     comp_names = []
     for comp_ops in (types[1:]):
-        comp_names.append('Comp. Ops. Type ' + str(comp_ops) + ' (Cap=' + str(value(cap[comp_ops])) + ')')
+        comp_names.append('Comp. Ops. (' +  str(jobNames[jobs[comp_ops][0]])+ ')')
     column_names.extend(comp_names)
 
     ## Use csv.DictWriter to format csv output and write to specified csv file
@@ -155,7 +155,7 @@ def group():
                     row_dict[name] = str(num+1)
                     num += 1
                 elif name == 'Tasks':
-                    row_dict[name] = str(task_dist[s])[1:-1]
+                    row_dict[name] = str(task_dist[s])[1:-1].replace("'", "") 
                 elif name == 'Human Ops.':
                     row_dict[name] = op_dist[0][0]
                 else:        

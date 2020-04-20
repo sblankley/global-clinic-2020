@@ -1,4 +1,4 @@
-Process (#),Process (Name),Cycle Time (s),Automated (Y/N),Capacity (# of ports),Immediate Predecessor (# from Col. 1),Takt,Human Capacity,Length (m),Width (m)
+Process (#),Process (Name),Cycle Time (s),Automated (Y/N),Capacity (# of ports),Immediate Predecessor (# from Col. 1),Takt (s),Human Capacity (# operators),Length (m),Width (m)
 1,,,,,,,,,
 2,,,,,,,,,
 3,,,,,,,,,

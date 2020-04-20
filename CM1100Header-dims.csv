@@ -1,4 +1,4 @@
-Process (#),Process (Name),Cycle Time (s),Automated (Y/N),Capacity (# of ports),Immediate Predecessor (# from Col. 1),Takt,Human Capacity,Length (m),Width (m)
+Process (#),Process (Name),Cycle Time (s),Automated (Y/N),Capacity (# of ports),Immediate Predecessor (# from Col. 1),Takt (s),Human Capacity (# operators),Length (m),Width (m)
 1,unpack,24,n,,,480,1,1.23,0.56
 2,receive,18,Y,4,1,,,1.2,0.4
 3,pack,10,n,,2,,,0.86,0.78
