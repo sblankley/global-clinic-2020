@@ -116,24 +116,29 @@ def run_stationPl():
 
 	# now we also want the bottom left corner of each new station in a line
 	# assign a spacer between stations
-
 	spacer = 1
+	# assigns a 1 meter offset from the x axis
+	xoffset = 1
+	# assigns an offset from the y axis that is half the width (y) of the first station plus a spacer
+	yoffset = placement[0][1]/2+spacer
+	# sets the x, y coordinates to plot at (1,1)
 	placement[0][2] = spacer
-	placement[0][3] = -placement[0][1]/2 + spacer
+	placement[0][3] = spacer
 	
-	offset = 0
+	# assigns maximum yoffset given the width of the stations:
+	for s in range(len(real_stations)):
+		if  yoffset < placement[s][1]/2 + spacer:
+			yoffset = placement[s][1]/2 + spacer
+
 	# for each newstation s (minus the last one)
 	for s in range(len(real_stations)-1):
 		# offset += the length of the newstation + spacer
-		offset += placement[s][0] + spacer
-		placement[s+1][2] = offset
-		placement[s+1][3] = -placement[s+1][1]/2 + spacer
+		xoffset += placement[s][0] + spacer
+		placement[s+1][2] = xoffset
+		placement[s+1][3] = (yoffset+ spacer)/2
 	# placement is length (x), width (y), x of bottom left, y of bottom left
 
-	for s in range(len(real_stations)):
-		for dim in range(4):
-			if placement[s][dim] < 0:
-				placement[s][dim] = abs(placement[s][dim]) + 1
+	
 
 	# global variables
 	settings.myList['placement'] = placement
