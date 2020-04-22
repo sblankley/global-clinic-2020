@@ -16,7 +16,8 @@ def group():
     takt = settings.myList['takt']
     cap = settings.myList['cap']
     jobNames = settings.myList['jobNames']
-
+    length = settings.myList['length']
+    width = settings.myList['width']
 
     M = 100
 
@@ -126,10 +127,131 @@ def group():
                 op_dist[index][t] = 0.0
 
         index += 1
+#############################################################################################################
+# dict with new stations as keys and jobs as values
+    tasks =	{}
+    for i in range(len(real_stations)):
+        tasks[i] = task_Dist[i]
+
+    operators = {}
+    for i in range(len(real_stations)):
+        operators[i] = op_dist[i]
+
+    jobs  #original dictionary with types as keys as jobs as values from csv reader
+
+    assignedJobs = [[[] for k in types] for i in range(len(real_stations))]
+    for s in range(len(real_stations)):
+        for t in types:
+            for j in jobs[t]:
+                if (j in tasks[s]):
+                    assignedJobs[s][t].append(j)
+
+	# assignedJobs = {{}}
+	# for s in range(len(real_stations)):
+	# 	for t in types:
+	# 		temp = []
+	# 		for j in jobs[t]:
+	# 			if (j in tasks[s]):
+	# 				temp.append(j)
+	# 		assignedJobs[s][t] = temp
+
+    #uncomment these lines for CSVs with size data
+    length # dict with jobs as keys as length as values, from csv reader
+    width # dict with jobs as keys and widths as values, from csv reader
+
+    # results are indexed by station and have job # and number of each type of operator
+    # we want to calculate the length and width of each station
+    # for each type, we calc the max space required
+    # if it's a human type, double the width and multiply the length by (# ops / 2)
+    # some computer jobs MUST be all next to each other -- will contemplate that
+
+    placement = [[0,0,0,0] for i in range(len(real_stations))]
+    # for each newstation
+    for s in range(len(real_stations)):
+        currLength = 0
+        currWidth = 0
+        for t in types[1:]:
+            if (len(assignedJobs[s][t])!=0):
+                # currLength += op_dist[s][t]*length[jobs[t][0]] # uncomment this line if reducing ports from full capacity
+                currLength += cap[t]*length[jobs[t][0]]
+                if (width[jobs[t][0]] > currWidth):
+                        currWidth = width[jobs[t][0]]
+        # now let's handle human jobs -- we can combine space if consecutive
+        lastJob = -1
+        maxLength = 0
+        maxWidth = 0
+        index = 0
+        while (index < len(assignedJobs[s][0])-1):
+            maxLength = 0
+            maxWidth = 0
+            while (assignedJobs[s][0][index]==lastJob+1):
+                if (length[j] > maxLength):
+                    maxLength = length[j]
+                if (width[j] > maxWidth):
+                    maxWidth = width[j]
+                lastJob = j
+                index += 1
+            print(op_dist[s][0])
+            print(op_dist[s][1])
+            if (op_dist[s][0] > 1):
+                currLength += math.ceil(op_dist[s][0]/2)*maxLength
+                if (2*maxWidth > currWidth):
+                    currWidth = 2*maxWidth
+            else:
+                currLength += maxLength
+                if (maxWidth > currWidth):
+                    currWidth = maxWidth	
+            lastJob = assignedJobs[s][0][index]
+            index += 1
+        placement[s][0] = currLength
+        placement[s][1] = currWidth
+
+
+        # for j in assignedJobs[s][0]:
+        #     # if number of operators is greater than one and is a human
+        # 	if (op_dist[s][t] > 1):
+        #         # take number of operators and divide by two
+        #         # temp will add that # times the length total length, and twice the width
+        # 		currLength += ceil(op_dist[s][t]/2)*maxLength
+        # 		currWidth[1] += 2*maxWidth
+        # 	else:
+        #         # temp will add that length and that width
+        # 		currLength += maxLength
+        # 		if (maxWidth > currWidth):
+        # 				currWidth = maxWidth
+        # station gets dimensions of temp
+
+
+    # now we also want the bottom left corner of each new station in a line
+    # assign a spacer between stations
+    spacer = 1
+    # assigns a 1 meter offset from the x axis
+    xoffset = 1
+    # assigns an offset from the y axis that is half the width (y) of the first station plus a spacer
+    yoffset = placement[0][1]/2+spacer
+    # sets the x, y coordinates to plot at (1,1)
+    placement[0][2] = spacer
+    placement[0][3] = spacer
+
+    # assigns maximum yoffset given the width of the stations:
+    for s in range(len(real_stations)):
+        if  yoffset < placement[s][1]/2 + spacer:
+            yoffset = placement[s][1]/2 + spacer
+
+    # for each newstation s (minus the last one)
+    for s in range(len(real_stations)-1):
+        # offset += the length of the newstation + spacer
+        xoffset += placement[s][0] + spacer
+        placement[s+1][2] = xoffset
+        placement[s+1][3] = (yoffset+ spacer)/2
+	# placement is length (x), width (y), x of bottom left, y of bottom left
+
+
+##############################################################################################################
     # CSVWrite
 
     ## create fieldnames for CSVwrite, add the proper number of computer operators, indicated by capacity
-    column_names = ['Station', 'Tasks', 'Human Ops.']
+    column_names = ['Station (#)', 'Length (m)', 'Width (m)','Process (Name)', 'Human Ops.(#)']
     comp_names = []
     for comp_ops in (types[1:]):
         comp_names.append('Comp. Ops. (' +  str(jobNames[jobs[comp_ops][0]])+ ')')
@@ -151,12 +273,18 @@ def group():
         for s in range(0,num_real_stations):
             row_dict = {}
             for name in fieldnames:
-                if name == 'Station':
+                if name == 'Station (#)':
                     row_dict[name] = str(num+1)
                     num += 1
-                elif name == 'Tasks':
+                elif name == 'Length (m)':
+                    # row_dict[name] = 1
+                    row_dict[name] = ceil(placement[s][0]*100.0)/100.00
+                elif name == 'Width (m)':
+                    # row_dict[name] = 2
+                    row_dict[name] = ceil(placement[s][1]*100.0)/100.00
+                elif name == 'Process (Name)':
                     row_dict[name] = str(task_dist[s])[1:-1].replace("'", "") 
-                elif name == 'Human Ops.':
+                elif name == 'Human Ops.(#)':
                     row_dict[name] = op_dist[0][0]
                 else:        
                     for comp_name in comp_names:
@@ -170,3 +298,5 @@ def group():
     settings.myList['op_dist'] = op_dist
     settings.myList['task_dist'] = task_dist
     settings.myList['task_Dist'] = task_Dist
+    settings.myList['placement'] = placement
+    
