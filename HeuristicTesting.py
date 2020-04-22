@@ -1,8 +1,7 @@
-from CSVReader import *
+from CSVReaderHeuristic import *
 from numpy import zeros
 from math import ceil
 # Warm start - Assumption: jobs occur serially
-# pseudo code using dictionaries
 ifJobAtStation = zeros((numJobs, numStations))
 numWorkers = zeros((numTypes, numStations))
 def jobType(j,jobDict): # function needed to figure out what type job j is
@@ -21,10 +20,17 @@ def canAddAnotherJob(j,s,numJobs,jobDict,takt, cycletimeDict,c): #function to ch
         if sum(c.values())+ cycleTime[j+1] >= takt: #if the next job will not allow the station to complete tasks under the cycle time 
             return 0                                #cannot add next job to current station
         if jobType(j+1,jobDict) == 0: #if next job is a human job
-            if (numWorkers[0][s]+ ceil(cycleTime[j+1]/takt)) <= cap[0]: #check if it won't violate human cap constraint
-                answer = 1   #current station can handle adding the next job
-            else:           #if it will violate human cap constraint, cannot add another job to current station
-                answer = 0
+            if c.get(0,takt) + cycleTime[j+1] > takt:  #check if you need to add another human
+                numWorkers[0][s] += 1       
+                if (numWorkers[0][s]) <= cap[0]: #then check if it won't violate human cap constraint
+                    answer = 1   #current station can handle adding the next job
+                else:           #if it will violate human cap constraint, cannot add another job to current station
+                    answer = 0
+            else:  #if you don't need to add another human
+                if (numWorkers[0][s]) <= cap[0]: #check that you haven't violated human cap constraint
+                    answer = 1   #current station can handle adding the next job
+                else:           #if it will violate human cap constraint, cannot add another job to current station
+                    answer = 0
         if jobType(j+1,jobDict)!= 0: #if next job is not human job
             if numWorkers[0][s] <= cap[0]: #check if there is enough space at current station
                 answer = 1 #if station has not reached its human cap, can add next job to current station
