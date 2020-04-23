@@ -1,6 +1,0 @@
-Station,Tasks,Human Ops.,Comp. Ops. Type 1 (Cap=4),Comp. Ops. Type 2 (Cap=4),Comp. Ops. Type 3 (Cap=4),Comp. Ops. Type 4 (Cap=10),Comp. Ops. Type 5 (Cap=8),Comp. Ops. Type 6 (Cap=8)
-1,"'unpack', 'receive', 'pack', 'wnlite', 'ri', 'fus'",1.0,1.0,1.0,0.0,0.0,0.0,0.0
-2,"'labels', 'burn mac', 'reset portal', 'wn functional', 'reset m/ clean', 'pot reset'",1.0,0.0,0.0,1.0,1.0,1.0,1.0
-3,"'qc', 'fotos'",1.0,0.0,0.0,0.0,0.0,0.0,0.0
-4,"'pack', 'bin', 'pack'",1.0,0.0,0.0,0.0,0.0,0.0,0.0
-5,'ooba',1.0,0.0,0.0,0.0,0.0,0.0,0.0
