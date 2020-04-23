@@ -5,6 +5,22 @@ from math import isnan #used in several functions to check if certain values are
 import csv
 import backend.settings as settings
 
+def splitIndex(n):
+    """will return the list index"""
+    return [(x+1) for x,y in zip(n, n[1:]) if y-x != 1]
+
+def splitList(inputList):
+    """will split the list base on the index"""
+    index = splitIndex(inputList)
+    splitList = list()
+    prev = 0
+    for i in index:
+        consecList = [ x for x in inputList[prev:] if x < i]
+        splitList.append(consecList)
+        prev += len(consecList)
+    splitList.append([ x for x in inputList[prev:]])
+    return splitList
+
 def group():
     # import global variables
     stations = settings.myList['stations']
@@ -177,50 +193,27 @@ def group():
                 if (width[jobs[t][0]] > currWidth):
                         currWidth = width[jobs[t][0]]
         # now let's handle human jobs -- we can combine space if consecutive
-        lastJob = -1
-        maxLength = 0
-        maxWidth = 0
-        index = 0
-        while (index < len(assignedJobs[s][0])-1):
+        splitJobs = splitList(assignedJobs[s][0])
+        group = 0
+        while (group < len(splitJobs) ):
             maxLength = 0
             maxWidth = 0
-            while (assignedJobs[s][0][index]==lastJob+1):
+            for j in splitJobs[group]:
                 if (length[j] > maxLength):
                     maxLength = length[j]
                 if (width[j] > maxWidth):
                     maxWidth = width[j]
-                lastJob = j
-                index += 1
-            print(op_dist[s][0])
-            print(op_dist[s][1])
-            if (op_dist[s][0] > 1):
-                currLength += math.ceil(op_dist[s][0]/2)*maxLength
+            if (op_dist[s][0] > 1): # if num human ops is greater than one
+                currLength += ceil(op_dist[s][0]/2)*maxLength
                 if (2*maxWidth > currWidth):
                     currWidth = 2*maxWidth
-            else:
+            else: # if num human ops is 1
                 currLength += maxLength
                 if (maxWidth > currWidth):
-                    currWidth = maxWidth	
-            lastJob = assignedJobs[s][0][index]
-            index += 1
+                    currWidth = maxWidth
+            group += 1
         placement[s][0] = currLength
         placement[s][1] = currWidth
-
-
-        # for j in assignedJobs[s][0]:
-        #     # if number of operators is greater than one and is a human
-        # 	if (op_dist[s][t] > 1):
-        #         # take number of operators and divide by two
-        #         # temp will add that # times the length total length, and twice the width
-        # 		currLength += ceil(op_dist[s][t]/2)*maxLength
-        # 		currWidth[1] += 2*maxWidth
-        # 	else:
-        #         # temp will add that length and that width
-        # 		currLength += maxLength
-        # 		if (maxWidth > currWidth):
-        # 				currWidth = maxWidth
-        # station gets dimensions of temp
-
 
     # now we also want the bottom left corner of each new station in a line
     # assign a spacer between stations
@@ -243,7 +236,7 @@ def group():
         # offset += the length of the newstation + spacer
         xoffset += placement[s][0] + spacer
         placement[s+1][2] = xoffset
-        placement[s+1][3] = (yoffset+ spacer)/2
+        placement[s+1][3] = yoffset-placement[s+1][1]/2 + spacer
 	# placement is length (x), width (y), x of bottom left, y of bottom left
 
 

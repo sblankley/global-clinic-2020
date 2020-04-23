@@ -9,11 +9,11 @@ def read(fileName):
     df.columns = df.columns.str.strip().str.lower().str.replace('[^a-zA-Z]', '') # only keeps the characters that are letters
 
     M = 100 #a "big" number necessary for setting upper and lower bounds of certain constraints in the math model
-    takt = df.takt[0] #the takt time is equal to the only value entered in the takt column in the CSV
+    takt = df.takts[0] #the takt time is equal to the only value entered in the takt column in the CSV
     # count number of jobs to get numJobs and numStations
     numJobs = len(df.process)
     numStations = numJobs
-    Cap = [df.humancapacity[0]] # start with max number of human operators at a station
+    Cap = [df.humancapacityoperators[0]] # start with max number of human operators at a station
     cycletime = []
     jobnames = []
     for i in range(numJobs):
