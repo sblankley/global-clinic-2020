@@ -1,0 +1,19 @@
+Process (#),Process (Name),Cycle Time (s),Automated (Y/N),Capacity (# of ports),Immediate Predecessor (# from Col. 1),Takt (s),Human Capacity (# operators),Length (m),Width (m)
+1,unpack,24,n,,,480,1,1.23,0.56
+2,receive,18,Y,4,1,,,1.2,0.4
+3,pack,10,n,,2,,,0.86,0.78
+4,wnlite,90,n,,3,,,1.84,1
+5,ri,8,y,4,4,,,0.5,0.56
+6,fus,60,n,,5,,,1.82,1
+7,labels,35,n,,6,,,2.44,0.6
+8,burn mac,31,y,4,7,,,0.43,0.33
+9,reset portal,9,y,10,8,,,1.22,0.56
+10,wn functional,20,y,8,9,,,0.15,0.22
+11,reset m/ clean,118,n,,10,,,1.21,0.6
+12,pot reset,8,y,8,11,,,0.15,0.25
+13,qc,60,n,,12,,,0.81,0.67
+14,fotos,92,n,,13,,,1.24,0.55
+15,pack,60,n,,14,,,2.42,0.62
+16,bin,10,n,,15,,,1.22,0.59
+17,pack,60,n,,16,,,1.8,0.61
+18,ooba,180,n,,17,,,2.54,0.59
