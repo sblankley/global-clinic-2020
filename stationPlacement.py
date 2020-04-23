@@ -1,5 +1,21 @@
-import settings
+import backend.settings as settings
 import math
+
+def splitIndex(n):
+    """will return the list index"""
+    return [(x+1) for x,y in zip(n, n[1:]) if y-x != 1]
+
+def splitList(inputList):
+    """will split the list base on the index"""
+    index = splitIndex(inputList)
+    splitList = list()
+    prev = 0
+    for i in index:
+        consecList = [ x for x in inputList[prev:] if x < i]
+        splitList.append(consecList)
+        prev += len(consecList)
+    splitList.append([ x for x in inputList[prev:]])
+    return splitList
 
 def run_stationPl():
 	# import global variables
@@ -69,35 +85,27 @@ def run_stationPl():
 				if (width[jobs[t][0]] > currWidth):
 						currWidth = width[jobs[t][0]]
 		# now let's handle human jobs -- we can combine space if consecutive
-		lastJob = -1
-		maxLength = 0
-		maxWidth = 0
-		index = 0
-		while (index < len(assignedJobs[s][0])-1):
-			maxLength = 0
+		splitJobs = splitList(assignedJobs[s][0])
+		group = 0
+		while (group < len(splitJobs) ):
+    		maxLength = 0
 			maxWidth = 0
-			while (assignedJobs[s][0][index]==lastJob+1):
-				if (length[j] > maxLength):
-					maxLength = length[j]
+			for j in splitJobs[group]:
+    			if (length[j] > maxLength):
+    				maxLength = length[j]
 				if (width[j] > maxWidth):
 					maxWidth = width[j]
-				lastJob = j
-				index += 1
-			print(op_dist[s][0])
-			print(op_dist[s][1])
-			if (op_dist[s][0] > 1):
-				currLength += math.ceil(op_dist[s][0]/2)*maxLength
+			if (op_dist[s][0] > 1): # if num human ops is greater than one
+    			currLength += ceil(op_dist[s][0]/2)*maxLength
 				if (2*maxWidth > currWidth):
 					currWidth = 2*maxWidth
-			else:
-				currLength += maxLength
+			else: # if num human ops is 1
+    			currLength += maxLength
 				if (maxWidth > currWidth):
-					currWidth = maxWidth	
-			lastJob = assignedJobs[s][0][index]
-			index += 1
+    				currWidth = maxWidth
+			group += 1
 		placement[s][0] = currLength
 		placement[s][1] = currWidth
-
 
 		# for j in assignedJobs[s][0]:
 		#     # if number of operators is greater than one and is a human
@@ -113,32 +121,59 @@ def run_stationPl():
 		# 				currWidth = maxWidth
 		# station gets dimensions of temp
 
+		# lastJob = -1
+		# maxLength = 0
+		# maxWidth = 0
+		# index = 0
+		# while (index < len(assignedJobs[s][0])-1):
+		# 	maxLength = 0
+		# 	maxWidth = 0
+		# 	while (assignedJobs[s][0][index]==lastJob+1):
+		# 		if (length[j] > maxLength):
+		# 			maxLength = length[j]
+		# 		if (width[j] > maxWidth):
+		# 			maxWidth = width[j]
+		# 		lastJob = j
+		# 		index += 1
+		# 	# print(op_dist[s][0])
+		# 	# print(op_dist[s][1])
+		# 	if (op_dist[s][0] > 1):
+		# 		currLength += math.ceil(op_dist[s][0]/2)*maxLength
+		# 		if (2*maxWidth > currWidth):
+		# 			currWidth = 2*maxWidth
+		# 	else:
+		# 		currLength += maxLength
+		# 		if (maxWidth > currWidth):
+		# 			currWidth = maxWidth	
+		# 	lastJob = assignedJobs[s][0][index]
+		# 	index += 1
+		# placement[s][0] = currLength
+		# placement[s][1] = currWidth
+
+
+
+
 
 	# now we also want the bottom left corner of each new station in a line
 	# assign a spacer between stations
-	spacer = 1
-	# assigns a 1 meter offset from the x axis
-	xoffset = 1
-	# assigns an offset from the y axis that is half the width (y) of the first station plus a spacer
-	yoffset = placement[0][1]/2+spacer
-	# sets the x, y coordinates to plot at (1,1)
-	placement[0][2] = spacer
-	placement[0][3] = spacer
-	
-	# assigns maximum yoffset given the width of the stations:
-	for s in range(len(real_stations)):
-		if  yoffset < placement[s][1]/2 + spacer:
-			yoffset = placement[s][1]/2 + spacer
 
+	spacer = 1
+	placement[0][2] = spacer
+	placement[0][3] = -placement[0][1]/2 + spacer
+	
+	xoffset = 0
 	# for each newstation s (minus the last one)
 	for s in range(len(real_stations)-1):
-		# offset += the length of the newstation + spacer
+		# xoffset += the length of the newstation + spacer
 		xoffset += placement[s][0] + spacer
 		placement[s+1][2] = xoffset
-		placement[s+1][3] = (yoffset+ spacer)/2
+		placement[s+1][3] = -placement[s+1][1]/2 + spacer
 	# placement is length (x), width (y), x of bottom left, y of bottom left
 
-	
+	for s in range(len(real_stations)):
+		for dim in range(4):
+			if placement[s][dim] < 0:
+				placement[s][dim] = abs(placement[s][dim]) + 1
 
 	# global variables
 	settings.myList['placement'] = placement
