@@ -3,7 +3,7 @@ import pandas as pd #install using pip install pandas, necessary to translate CS
 from math import ceil #ceil used in finding number of workers and in humanCap
 from math import isnan #used in several functions to check if certain values are not numbers
 import csv
-import settings
+import backend.settings as settings
 
 def group():
     # import global variables
@@ -299,4 +299,3 @@ def group():
     settings.myList['task_dist'] = task_dist
     settings.myList['task_Dist'] = task_Dist
     settings.myList['placement'] = placement
-    
