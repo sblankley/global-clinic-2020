@@ -169,6 +169,19 @@ class DataWindow(QtWidgets.QMainWindow):
                     for field in row 
                 ]
                 self.model.appendRow(items)
+                self.model.appendRow(items)
+                for rowNum1 in range(0,len(list(csv.reader(fileName)))+1):
+                    for colNum1 in range(0,10):
+                        self.model.setData(
+                                    self.model.index(rowNum1, colNum1), QtCore.Qt.AlignCenter, 
+                                    QtCore.Qt.TextAlignmentRole
+                                )
+                for rowNum2 in range(2,len(list(csv.reader(fileName)))+1):
+                    for colNum2 in range(8,10):
+                        self.model.setData(
+                                    self.model.index(rowNum2, colNum2), QBrush(
+                                        QColor(211, 211, 211)), QtCore.Qt.BackgroundRole
+                                )
                 
     def writeCsv(self, fileName):
         with open(fileName, "w", newline='') as fileOutput:
