@@ -6,7 +6,7 @@
 
 # import necessary libraries
 import backend
-from backend import stationPlacement, taskgrouping, CSVReader, settings, control 
+from backend import taskgrouping, CSVReader, settings, control 
 import sys, csv 
 from PyQt5 import QtCore, QtWidgets, QtGui, uic
 from PyQt5.QtWidgets import *
@@ -32,10 +32,10 @@ class SplashWindow(QtWidgets.QMainWindow):
     def __init__(self):
         # General HelpWindow settings 
         super(SplashWindow, self).__init__() # Call the inherited classes __init__ method
-        uic.loadUi('backend\splash.ui', self) # Load the splash window .ui file
+        uic.loadUi('backend/splash.ui', self) # Load the splash window .ui file
         self.model = QtGui.QStandardItemModel(self)
         self.setWindowTitle("HMC Optimization Suite")
-        self.setWindowIcon(QIcon('backend\hmc.png'))
+        self.setWindowIcon(QIcon('backend/hmc.png'))
 
         # Settings specific to the Splash Window 
 
@@ -52,9 +52,9 @@ class Warning(QtWidgets.QMainWindow):
 
     def __init__(self):
         super(Warning, self).__init__() # Call the inherited classes __init__ method
-        uic.loadUi('backend\warning.ui', self) # Load the main .ui file
+        uic.loadUi('backend/warning.ui', self) # Load the main .ui file
         self.setWindowTitle('Unsaved changes will be lost!')        
-        self.setWindowIcon(QIcon('backend\hmc.png'))
+        self.setWindowIcon(QIcon('backend/hmc.png'))
 
         layout = QtWidgets.QGridLayout()
     
@@ -73,9 +73,9 @@ class Check(QtWidgets.QMainWindow):
 
     def __init__(self, fileName):
         super(Check, self).__init__() # Call the inherited classes __init__ method
-        uic.loadUi('backend\check.ui', self) # Load the main .ui file
+        uic.loadUi('backend/check.ui', self) # Load the main .ui file
         self.setWindowTitle('Unsaved changes will be lost!')        
-        self.setWindowIcon(QIcon('backend\hmc.png'))
+        self.setWindowIcon(QIcon('backend/hmc.png'))
 
         layout = QtWidgets.QGridLayout()
 
@@ -103,12 +103,12 @@ class DataWindow(QtWidgets.QMainWindow):
     #
     def __init__(self):
         super(DataWindow, self).__init__() # Call the inherited classes __init__ method
-        uic.loadUi('backend\dataWindow.ui', self) # Load the main .ui file
+        uic.loadUi('backend/dataWindow.ui', self) # Load the main .ui file
 
-        self.fileName = r'backend\template.csv' # default input filename
+        self.fileName = r'backend/template.csv' # default input filename
         self.model = QtGui.QStandardItemModel(self)
         self.setWindowTitle("HMC Optimization Suite")
-        self.setWindowIcon(QIcon('backend\hmc.png'))
+        self.setWindowIcon(QIcon('backend/hmc.png'))
         self.tableView = self.findChild(QtWidgets.QTableView,"tableView")
         self.tableView.setModel(self.model)
 
@@ -169,6 +169,18 @@ class DataWindow(QtWidgets.QMainWindow):
                     for field in row 
                 ]
                 self.model.appendRow(items)
+                for rowNum1 in range(0,len(list(csv.reader(fileName)))+1):
+                    for colNum1 in range(0,10):
+                        self.model.setData(
+                                    self.model.index(rowNum1, colNum1), QtCore.Qt.AlignCenter, 
+                                    QtCore.Qt.TextAlignmentRole
+                                )
+                for rowNum2 in range(2,len(list(csv.reader(fileName)))+1):
+                    for colNum2 in range(8,10):
+                        self.model.setData(
+                                    self.model.index(rowNum2, colNum2), QBrush(
+                                        QColor(211, 211, 211)), QtCore.Qt.BackgroundRole
+                                )
                 
     def writeCsv(self, fileName):
         with open(fileName, "w", newline='') as fileOutput:
@@ -195,10 +207,10 @@ class HelpWindow(QtWidgets.QMainWindow):
     def __init__(self):
         # General HelpWindow settings 
         super(HelpWindow, self).__init__() # Call the inherited classes __init__ method
-        uic.loadUi('backend\help.ui', self) # Load the main .ui file
+        uic.loadUi('backend/help.ui', self) # Load the main .ui file
         self.model = QtGui.QStandardItemModel(self)
         self.setWindowTitle("HMC Optimization Suite Help")
-        self.setWindowIcon(QIcon('backend\hmc.png'))
+        self.setWindowIcon(QIcon('backend/hmc.png'))
 
     def on_pushButtonDone_clicked(self):
         self.done.emit()
@@ -211,12 +223,12 @@ class ResultsWindow(QtWidgets.QMainWindow):
     # Initialize the GUI window and define the objects within it
     def __init__(self):
        super(ResultsWindow, self).__init__() # Call the inherited classes __init__ method
-       uic.loadUi(r'backend\results.ui', self) # Load the main .ui file, prepend with 'r' to avoid '\r' issue
+       uic.loadUi(r'backend/results.ui', self) # Load the main .ui file, prepend with 'r' to avoid '/r' issue
        self.fileName = "pLineOpt.csv" # default output file name
        self.imageName = "StationLayout.png" # default output file name
        self.model = QtGui.QStandardItemModel(self)
        self.setWindowTitle("HMC Optimization Results")
-       self.setWindowIcon(QIcon('backend\hmc.png'))
+       self.setWindowIcon(QIcon('backend/hmc.png'))
        self.tableView = self.findChild(QtWidgets.QTableView,"tableView")
        self.tableView.setModel(self.model)
        self.initUI()
@@ -317,13 +329,11 @@ class ResultsWindow(QtWidgets.QMainWindow):
                 writer.writerow(fields)
     
 class Canvas(FigureCanvas):
-
-    def __init__(self, parent = None, width=10, height=10, dpi = 100):
-        fig = Figure(figsize=(width, height), dpi=dpi)
+    def __init__(self, parent,width, height, dpi=100):# = None, 
+        fig = Figure(parent,figsize=(width, height),dpi=dpi)
         self.axes = fig.add_subplot(111)
         self.fileName = "StationPlacement.png"
         FigureCanvas.__init__(self, fig)
-        self.setParent(parent)
         FigureCanvas.setSizePolicy(self,
                 QtWidgets.QSizePolicy.Expanding,
                 QtWidgets.QSizePolicy.Expanding)
@@ -361,8 +371,8 @@ class Canvas(FigureCanvas):
                 patches.Rectangle((self.xlcorner, self.ylcorner), self.stationWidth,
                                   self.stationLength, fc = '#d6bc8a',linewidth=1.5, edgecolor='k', fill='False')
             )
-
-            ax.text(self.cx, self.cy, 'Station %1i' % (s+1), color='k', 
+                        
+            ax.text(self.cx, self.cy, 'S%1i' % (s+1), color='k', 
                     ha='center', va='center', weight='bold')
 
             Xbound = 1.2*xgrid+maxwidth
@@ -380,6 +390,17 @@ class Canvas(FigureCanvas):
     def saveImage(self, fileName):
         with open(fileName, "wb") as layoutImage:
             self.axes.figure.savefig(layoutImage)
+
+    def on_resize(self,event):
+        # determine the ratio of old width/height to new width/height
+        wscale = float(event.width)/self.width
+        hscale = float(event.height)/self.height
+        self.width = event.width
+        self.height = event.height
+        # resize the canvas 
+        self.config(width=self.width, height=self.height)
+        # rescale all the objects tagged with the "all" tag
+        self.scale("all",0,0,wscale,hscale)
 
 class Controller:
 
