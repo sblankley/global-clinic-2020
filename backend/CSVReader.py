@@ -2,18 +2,24 @@
 
 import pandas as pd #install using pip install pandas, necessary to translate CSV into a dataframe we can work with
 import backend.settings as settings
-from math import ceil 
+from math import ceil
+from math import isnan   
 
 def read(fileName):
     df = pd.read_csv(fileName, skiprows =0) #reads in the CSV file you're going to work with and gets rid of the title row
     df.columns = df.columns.str.strip().str.lower().str.replace('[^a-zA-Z]', '') # only keeps the characters that are letters
+    df.dropna(axis=0, how='all',inplace=True)
+    df.reset_index(drop=True, inplace=True)
 
     M = 100 #a "big" number necessary for setting upper and lower bounds of certain constraints in the math model
     takt = df.takts[0] #the takt time is equal to the only value entered in the takt column in the CSV
     # count number of jobs to get numJobs and numStations
     numJobs = len(df.process)
     numStations = numJobs
-    Cap = [df.humancapacityoperators[0]] # start with max number of human operators at a station
+    if isnan(df.humancapacityoperators[0]) == True: #if human cap cell is empty, assign arbitrary number, will get fixed later
+        Cap = [1]
+    else: 
+        Cap = [df.humancapacityoperators[0]] # start with max number of human operators at a station
     cycletime = []
     jobnames = []
     for i in range(numJobs):
@@ -23,7 +29,7 @@ def read(fileName):
             #if df.capacityofports[i] not in Cap[1:]:  #check if the capacity has not been added before, and disregard human cap value
             Cap.append(int(df.capacityofports[i]))  #add capcacity of each type of computer job
     numTypes = len(Cap)
-    #check to make sure manual human cap will not break
+    #check to make sure manual human cap will not break up the jobs
     if Cap[0]<ceil(max(cycletime)/takt):
         Cap[0] = int(ceil(max(cycletime)/takt))
     # create list of types and computer types, list of stations
