@@ -1,4 +1,5 @@
 from pulp import *
+from pathlib import Path
 import pandas as pd #install using pip install pandas, necessary to translate CSV into a dataframe we can work with
 from math import ceil #ceil used in finding number of workers and in humanCap
 from math import isnan #used in several functions to check if certain values are not numbers
@@ -75,8 +76,11 @@ def group():
     #     prob += lpSum(numWorkers[(t,s)] for t in compTypes) <= numWorkers[(0,s)] * M
 
     # SOLVE
-    prob.solve()
-
+    #prob.solve()
+    filePath = Path().absolute()
+    fileStr = str(filePath)
+    fileStr += r"\backend\cbc.exe"
+    prob.solve(COIN_CMD(path = fileStr))
 
     # OUTPUT MGMT
 
