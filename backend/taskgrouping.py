@@ -240,7 +240,7 @@ def group():
         # offset += the length of the newstation + spacer
         xoffset += placement[s][0] + spacer
         placement[s+1][2] = xoffset
-        placement[s+1][3] = yoffset-placement[s+1][1]/2 + spacer
+        placement[s+1][3] = yoffset-placement[s+1][1]/2
 	# placement is length (x), width (y), x of bottom left, y of bottom left
 
 
