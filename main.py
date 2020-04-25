@@ -111,6 +111,7 @@ class DataWindow(QtWidgets.QMainWindow):
         self.setWindowIcon(QIcon('backend\hmc.png'))
         self.tableView = self.findChild(QtWidgets.QTableView,"tableView")
         self.tableView.setModel(self.model)
+        self.save_file = r'pLine.csv'
 
         # manually connect pushbuttons to avoid doubling the connection when using auto-connect
         self.pushButtonLoad.clicked.connect(self.upload)
@@ -145,18 +146,18 @@ class DataWindow(QtWidgets.QMainWindow):
     def save_table(self):
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
-        save_file, _ = QFileDialog.getSaveFileName(None,"Choose input file to save","","Comma Separated Values Files (*.csv)", options=options)
-        if save_file:
+        self.save_file, _ = QFileDialog.getSaveFileName(None,"Choose input file to save","","Comma Separated Values Files (*.csv)", options=options)
+        if (self.save_file):
             ext = ""
             # check if user input a .csv file extension: if not, append with .csv
             for x in [-4,-3,-2,-1]:
                 end = str(save_file[x])
                 ext += end
             if (ext == ".csv"):                
-                self.fileName = save_file
+                self.fileName = self.save_file
             else:
-                save_file += ".csv"
-                self.fileName = save_file        
+                self.save_file += ".csv"
+                self.fileName = self.save_file        
             self.writeCsv(self.fileName)
     #
     # .csv functions
@@ -254,12 +255,10 @@ class ResultsWindow(QtWidgets.QMainWindow):
         options |= QFileDialog.DontUseNativeDialog
         save_file, _ = QFileDialog.getSaveFileName(None,"Choose output data file","","Comma Separated Values Files (*.csv)", options=options)
         if save_file:
-            print(save_file)
             ext = ""
             for x in [-4,-3,-2,-1]:
                 end = str(save_file[x])
                 ext += end
-            print(ext)
             if (ext == ".csv"):                
                 self.fileName = save_file
             else:
@@ -274,13 +273,11 @@ class ResultsWindow(QtWidgets.QMainWindow):
         options |= QFileDialog.DontUseNativeDialog
         save_file, _ = QFileDialog.getSaveFileName(None,"Choose output data file","","Comma Separated Values Files (*.png)", options=options)
         if save_file:
-            print(save_file)
             ext = ""
             # check if user input a .csv file extension: if not, append with .csv
             for x in [-4,-3,-2,-1]:
                 end = str(save_file[x])
                 ext += end
-            print(ext)
             if (ext == ".png"):                
                 self.imageName = save_file
             else:
@@ -364,9 +361,7 @@ class Canvas(FigureCanvas):
                 maxlen=placement[s][1]
             if placement[s][0]>maxwidth:
                 maxwidth=placement[s][0]
-            
-            print(placement)
-
+        
             rect.append(
                 patches.Rectangle((self.xlcorner, self.ylcorner), self.stationWidth,
                                   self.stationLength, fc = '#d6bc8a',linewidth=1.5, edgecolor='k', fill='False')
@@ -432,7 +427,8 @@ class Controller:
 
     def new_save(self):
         self.window.save_table()
-        self.show_results()        
+        if(self.window.save_file):
+            self.show_results()        
 
     def show_results(self):
         self.check.close()
