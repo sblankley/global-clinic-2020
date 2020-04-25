@@ -329,8 +329,8 @@ class ResultsWindow(QtWidgets.QMainWindow):
                 writer.writerow(fields)
     
 class Canvas(FigureCanvas):
-    def __init__(self, parent,width, height, dpi=100):# = None, 
-        fig = Figure(parent,figsize=(width, height),dpi=dpi)
+    def __init__(self, parent = None, width=10, height=10, dpi = 100):
+        fig = Figure(figsize=(width, height), dpi=dpi)
         self.axes = fig.add_subplot(111)
         self.fileName = "StationPlacement.png"
         FigureCanvas.__init__(self, fig)
@@ -338,7 +338,7 @@ class Canvas(FigureCanvas):
                 QtWidgets.QSizePolicy.Expanding,
                 QtWidgets.QSizePolicy.Expanding)
         FigureCanvas.updateGeometry(self)
-
+        self.setParent(parent)
         ax = self.axes
         ax.set_title('Layout Results')
         xgrid, ygrid, maxwidth, maxlen = 0, 0, 0, 0
