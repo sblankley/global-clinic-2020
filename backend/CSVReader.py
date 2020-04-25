@@ -8,7 +8,7 @@ from math import isnan
 def read(fileName):
     df = pd.read_csv(fileName, skiprows =0) #reads in the CSV file you're going to work with and gets rid of the title row
     df.columns = df.columns.str.strip().str.lower().str.replace('[^a-zA-Z]', '') # only keeps the characters that are letters
-    df.dropna(axis=0, how='all',inplace=True)
+    df.dropna(axis=0, how='all',thresh= 5,inplace=True)
     df.reset_index(drop=True, inplace=True)
 
     M = 100 #a "big" number necessary for setting upper and lower bounds of certain constraints in the math model
