@@ -175,6 +175,11 @@ class DataWindow(QtWidgets.QMainWindow):
                                     self.model.index(rowNum1, colNum1), QtCore.Qt.AlignCenter, 
                                     QtCore.Qt.TextAlignmentRole
                                 )
+                        if rowNum1 == 0:
+                            self.model.setData(
+                                    self.model.index(0, colNum1), QBrush(
+                                        QColor(214,188,138)), QtCore.Qt.BackgroundRole
+                                )
                 for rowNum2 in range(2,len(list(csv.reader(fileName)))+1):
                     for colNum2 in range(8,10):
                         self.model.setData(
@@ -303,6 +308,7 @@ class ResultsWindow(QtWidgets.QMainWindow):
     
     # .csv functions
     def loadCsv(self, fileName):
+        row_dict = settings.myList['row_dict']
         with open(fileName, "r") as fileInput:
             for row in csv.reader(fileInput):    
                 items = [
@@ -310,6 +316,18 @@ class ResultsWindow(QtWidgets.QMainWindow):
                     for field in row
                 ]
                 self.model.appendRow(items)
+                for rowNum1 in range(0,len(list(csv.reader(fileName)))+1):
+                    for colNum1 in range(0,len(row_dict)):
+                        self.model.setData(
+                                    self.model.index(rowNum1, colNum1), QtCore.Qt.AlignCenter, 
+                                    QtCore.Qt.TextAlignmentRole
+                                )
+                        if rowNum1 == 0:
+                            self.model.setData(
+                                    self.model.index(0, colNum1), QBrush(
+                                        QColor(214,188,138)), QtCore.Qt.BackgroundRole
+                                )
+
 
     def writeCsv(self, fileName):
         with open(fileName, "w", newline='') as fileOutput:
