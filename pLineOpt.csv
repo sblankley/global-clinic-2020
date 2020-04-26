@@ -1,0 +1,4 @@
+Station (#),Length (m),Width (m),Process (Name),Human Ops.(#),Comp. Ops. (receive),Comp. Ops. (ri),Comp. Ops. (burn mac),Comp. Ops. (reset portal),Comp. Ops. (wn functional),Comp. Ops. (pot reset)
+1,28.64,1.0,"unpack, receive, pack, wnlite, ri, fus, labels, burn mac, reset portal, wn functional, reset m/ clean",1.0,1.0,1.0,1.0,1.0,1.0,0.0
+2,1.2,0.25,pot reset,1.0,0.0,0.0,0.0,0.0,0.0,1.0
+3,2.54,0.67,"qc, fotos, pack, bin, pack, ooba",1.0,0.0,0.0,0.0,0.0,0.0,0.0

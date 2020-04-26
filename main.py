@@ -244,8 +244,8 @@ class ResultsWindow(QtWidgets.QMainWindow):
        widget = QWidget()
        layout = QGridLayout() # sets layout
        # defines a grid layout for each widget by row, column, rowSpan, columnSpan
-       layout.addWidget(self.tableView, 0,0,4,11) 
-       layout.addWidget(self.mplwidget, 5,0,1,11)
+       layout.addWidget(self.tableView, 0,0,3,11) 
+       layout.addWidget(self.mplwidget, 4,0,2,11)
        layout.addWidget(self.pushButtonHelp, 7,0,1,1)
        layout.addWidget(self.pushButtonSaveLayout, 7,8,1,1)
        layout.addWidget(self.pushButtonSaveTable, 7,9,1,1)
@@ -387,14 +387,13 @@ class MplWidget(QWidget):
 
             if placement[s][2]>xgrid:
                 xgrid=placement[s][2]
+                lastStationLength = placement[s][0]
             if placement[s][3]>ygrid:
                 ygrid=placement[s][3]
             if placement[s][1]>maxwidth:
                 maxwidth=placement[s][1]
             if placement[s][0]>maxlen:
                 maxlen=placement[s][0]
-            
-            print(placement)
 
             rect.append(
                 patches.Rectangle((self.xlcorner, self.ylcorner), self.stationLength,
@@ -403,18 +402,14 @@ class MplWidget(QWidget):
                         
             ax.text(self.cx, self.cy, 'S%1i' % (s+1), color='k', 
                     ha='center', va='center', weight='bold')
-            print(xgrid)
-            print(maxlen)
-            print(ygrid)
-            print(maxwidth)
-            spacer = 1
-            Xbound = xgrid+maxlen+spacer
-            Ybound = ygrid+maxwidth+spacer*2
-            ax.set_xticks(numpy.arange(0, numpy.rint(Xbound), step=numpy.ceil(Xbound/10)))
-            ax.set_yticks(numpy.arange(0, numpy.rint(Ybound), step=numpy.ceil(Ybound/10)))
+        spacer = 1
+        Xbound = xgrid+lastStationLength+spacer
+        Ybound = ygrid+maxwidth+spacer
+        ax.set_xticks(numpy.arange(0, numpy.ceil(Xbound)+1, step=numpy.ceil(Xbound/10)))
+        ax.set_yticks(numpy.arange(0, numpy.ceil(Ybound)+1, step=numpy.ceil(Ybound/10)))
 
-            ax.set_xlabel('X (m)')
-            ax.set_ylabel('Y (m)')
+        ax.set_xlabel('X (m)')
+        ax.set_ylabel('Y (m)')
 
         for item in rect:
             ax.add_patch(item)
