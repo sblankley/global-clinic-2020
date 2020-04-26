@@ -32,10 +32,10 @@ class SplashWindow(QtWidgets.QMainWindow):
     def __init__(self):
         # General HelpWindow settings 
         super(SplashWindow, self).__init__() # Call the inherited classes __init__ method
-        uic.loadUi('backend\splash.ui', self) # Load the splash window .ui file
+        uic.loadUi(r'backend\splash.ui', self) # Load the splash window .ui file
         self.model = QtGui.QStandardItemModel(self)
         self.setWindowTitle("HMC Optimization Suite")
-        self.setWindowIcon(QIcon('backend\hmc.png'))
+        self.setWindowIcon(QIcon(r'backend\hmc.png'))
 
         # Settings specific to the Splash Window 
 
@@ -52,9 +52,9 @@ class Warning(QtWidgets.QMainWindow):
 
     def __init__(self):
         super(Warning, self).__init__() # Call the inherited classes __init__ method
-        uic.loadUi('backend\warning.ui', self) # Load the main .ui file
+        uic.loadUi(r'backend\warning.ui', self) # Load the main .ui file
         self.setWindowTitle('Unsaved changes will be lost!')        
-        self.setWindowIcon(QIcon('backend\hmc.png'))
+        self.setWindowIcon(QIcon(r'backend\hmc.png'))
 
         layout = QtWidgets.QGridLayout()
     
@@ -73,9 +73,9 @@ class Check(QtWidgets.QMainWindow):
 
     def __init__(self, fileName):
         super(Check, self).__init__() # Call the inherited classes __init__ method
-        uic.loadUi('backend\check.ui', self) # Load the main .ui file
+        uic.loadUi(r'backend\check.ui', self) # Load the main .ui file
         self.setWindowTitle('Unsaved changes will be lost!')        
-        self.setWindowIcon(QIcon('backend\hmc.png'))
+        self.setWindowIcon(QIcon(r'backend\hmc.png'))
 
         layout = QtWidgets.QGridLayout()
 
@@ -108,7 +108,7 @@ class DataWindow(QtWidgets.QMainWindow):
         self.fileName = r'backend\template.csv' # default input filename
         self.model = QtGui.QStandardItemModel(self)
         self.setWindowTitle("HMC Optimization Suite")
-        self.setWindowIcon(QIcon('backend\hmc.png'))
+        self.setWindowIcon(QIcon(r'backend\hmc.png'))
         self.tableView = self.findChild(QtWidgets.QTableView,"tableView")
         self.tableView.setModel(self.model)
         self.save_file = r'pLine.csv'
@@ -213,10 +213,10 @@ class HelpWindow(QtWidgets.QMainWindow):
     def __init__(self):
         # General HelpWindow settings 
         super(HelpWindow, self).__init__() # Call the inherited classes __init__ method
-        uic.loadUi('backend\help.ui', self) # Load the main .ui file
+        uic.loadUi(r'backend\help.ui', self) # Load the main .ui file
         self.model = QtGui.QStandardItemModel(self)
         self.setWindowTitle("HMC Optimization Suite Help")
-        self.setWindowIcon(QIcon('backend\hmc.png'))
+        self.setWindowIcon(QIcon(r'backend\hmc.png'))
 
     def on_pushButtonDone_clicked(self):
         self.done.emit()
@@ -234,7 +234,7 @@ class ResultsWindow(QtWidgets.QMainWindow):
        self.imageName = "StationLayout.png" # default output file name
        self.model = QtGui.QStandardItemModel(self)
        self.setWindowTitle("HMC Optimization Results")
-       self.setWindowIcon(QIcon('backend\hmc.png'))
+       self.setWindowIcon(QIcon(r'backend\hmc.png'))
        self.tableView = self.findChild(QtWidgets.QTableView,"tableView")
        self.tableView.setModel(self.model)
        self.MplWidget = self.findChild(QtWidgets.QWidget,"MplWidget") # looks for MplWidget object in results.ui
