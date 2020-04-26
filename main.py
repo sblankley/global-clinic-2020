@@ -104,7 +104,7 @@ class DataWindow(QtWidgets.QMainWindow):
     #
     def __init__(self):
         super(DataWindow, self).__init__() # Call the inherited classes __init__ method
-        uic.loadUi('backend\dataWindow.ui', self) # Load the main .ui file
+        uic.loadUi(r'backend\dataWindow.ui', self) # Load the main .ui file
 
         self.fileName = r'backend\template.csv' # default input filename
         self.model = QtGui.QStandardItemModel(self)
