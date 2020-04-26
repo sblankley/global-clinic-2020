@@ -20,6 +20,8 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import math 
 
+QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
+
 backend.settings.init() # initialize "global" variables list
 
 ### UI Classes
@@ -241,6 +243,7 @@ class ResultsWindow(QtWidgets.QMainWindow):
        self.tableView.setModel(self.model)
        self.MplWidget = self.findChild(QtWidgets.QWidget,"MplWidget") # looks for MplWidget object in results.ui
        self.mplwidget = MplWidget(self.MplWidget)
+       self.setGeometry(1920, 1080, 1920, 1080)
        widget = QWidget()
        layout = QGridLayout() # sets layout
        # defines a grid layout for each widget by row, column, rowSpan, columnSpan
@@ -501,6 +504,7 @@ class Controller:
         
 
 app = QtWidgets.QApplication(sys.argv)
+app.setStyle("Fusion")
 controller = Controller()
 controller.show_splash()
 sys.exit(app.exec_())
