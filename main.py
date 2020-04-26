@@ -373,34 +373,38 @@ class MplWidget(QWidget):
         a = len(stations)
         rect = []
         for s in range(0,a):
-            self.stationWidth = placement[s][0]
-            self.stationLength = placement[s][1]
+            self.stationLength = placement[s][0]
+            self.stationWidth = placement[s][1]
             self.xlcorner = placement[s][2]
             self.ylcorner = placement[s][3]
-            self.cx = self.xlcorner + self.stationWidth/2
-            self.cy = self.ylcorner + self.stationLength/2
+            self.cx = self.xlcorner + self.stationLength/2
+            self.cy = self.ylcorner + self.stationWidth/2
 
             if placement[s][2]>xgrid:
                 xgrid=placement[s][2]
             if placement[s][3]>ygrid:
                 ygrid=placement[s][3]
-            if placement[s][1]>maxlen:
-                maxlen=placement[s][1]
-            if placement[s][0]>maxwidth:
-                maxwidth=placement[s][0]
+            if placement[s][1]>maxwidth:
+                maxwidth=placement[s][1]
+            if placement[s][0]>maxlen:
+                maxlen=placement[s][0]
             
             print(placement)
 
             rect.append(
-                patches.Rectangle((self.xlcorner, self.ylcorner), self.stationWidth,
-                                  self.stationLength, fc = '#d6bc8a',linewidth=1.5, edgecolor='k', fill='False')
+                patches.Rectangle((self.xlcorner, self.ylcorner), self.stationLength,
+                                  self.stationWidth, fc = '#d6bc8a',linewidth=1.5, edgecolor='k', fill='False')
             )
                         
             ax.text(self.cx, self.cy, 'S%1i' % (s+1), color='k', 
                     ha='center', va='center', weight='bold')
-
-            Xbound = 1.2*xgrid+maxwidth
-            Ybound = 2*ygrid+maxlen
+            print(xgrid)
+            print(maxlen)
+            print(ygrid)
+            print(maxwidth)
+            spacer = 1
+            Xbound = xgrid+maxlen+spacer
+            Ybound = ygrid+maxwidth+spacer*2
             ax.set_xticks(numpy.arange(0, numpy.rint(Xbound), step=numpy.ceil(Xbound/10)))
             ax.set_yticks(numpy.arange(0, numpy.rint(Ybound), step=numpy.ceil(Ybound/10)))
 
