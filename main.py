@@ -241,8 +241,8 @@ class ResultsWindow(QtWidgets.QMainWindow):
        widget = QWidget()
        layout = QGridLayout() # sets layout
        # defines a grid layout for each widget by row, column, rowSpan, columnSpan
-       layout.addWidget(self.tableView, 0,0,4,11) 
-       layout.addWidget(self.mplwidget, 5,0,1,11)
+       layout.addWidget(self.tableView, 0,0,3,11) 
+       layout.addWidget(self.mplwidget, 4,0,2,11)
        layout.addWidget(self.pushButtonHelp, 7,0,1,1)
        layout.addWidget(self.pushButtonSaveLayout, 7,8,1,1)
        layout.addWidget(self.pushButtonSaveTable, 7,9,1,1)
@@ -355,7 +355,7 @@ class MplWidget(QWidget):
     def __init__(self, parent = None):
         QWidget.__init__ ( self ,  parent )
         self.setParent(parent)
-        self.canvas  =  FigureCanvas ( Figure(figsize=(4, 4), dpi=100))
+        self.canvas  =  FigureCanvas ( Figure()) # figsize=(4, 4), dpi=100))
         self.layout = QGridLayout(self)
         self.layout.addWidget(self.canvas)
         self.setLayout(self.layout)
