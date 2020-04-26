@@ -296,3 +296,4 @@ def group():
     settings.myList['task_dist'] = task_dist
     settings.myList['task_Dist'] = task_Dist
     settings.myList['placement'] = placement
+    settings.myList['row_dict'] = row_dict

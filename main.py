@@ -176,6 +176,11 @@ class DataWindow(QtWidgets.QMainWindow):
                                     self.model.index(rowNum1, colNum1), QtCore.Qt.AlignCenter, 
                                     QtCore.Qt.TextAlignmentRole
                                 )
+                        if rowNum1 == 0:
+                            self.model.setData(
+                                    self.model.index(0, colNum1), QBrush(
+                                        QColor(214,188,138)), QtCore.Qt.BackgroundRole
+                                )
                 for rowNum2 in range(2,len(list(csv.reader(fileName)))+1):
                     for colNum2 in range(8,10):
                         self.model.setData(
@@ -232,22 +237,25 @@ class ResultsWindow(QtWidgets.QMainWindow):
        self.setWindowIcon(QIcon('backend\hmc.png'))
        self.tableView = self.findChild(QtWidgets.QTableView,"tableView")
        self.tableView.setModel(self.model)
-       self.initUI()
+       self.MplWidget = self.findChild(QtWidgets.QWidget,"MplWidget") # looks for MplWidget object in results.ui
+       self.mplwidget = MplWidget(self.MplWidget)
+       widget = QWidget()
+       layout = QGridLayout() # sets layout
+       # defines a grid layout for each widget by row, column, rowSpan, columnSpan
+       layout.addWidget(self.tableView, 0,0,4,11) 
+       layout.addWidget(self.mplwidget, 5,0,1,11)
+       layout.addWidget(self.pushButtonHelp, 7,0,1,1)
+       layout.addWidget(self.pushButtonSaveLayout, 7,8,1,1)
+       layout.addWidget(self.pushButtonSaveTable, 7,9,1,1)
+       layout.addWidget(self.pushButtonReturn, 7,10,1,1)
+       widget.setLayout(layout) # sets layout
+       self.setCentralWidget(widget) # makes all these widgets central widgets
 
        self.pushButtonSaveTable.clicked.connect(self.save_table)   # create non-implicit function to avoid double-press issue
        self.pushButtonSaveLayout.clicked.connect(self.save_layout) # ^
 
-       # tableview settings to have window contents dynamically resize
-       self.tableView.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-       self.tableView.verticalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
+       self.tableView.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents) # ensures all text is visible in each column
    
-    def initUI(self):
-        mainWindow = self
-        width = mainWindow.frameGeometry().width()*0.00466
-        height = mainWindow.frameGeometry().height()*0.0093
-        canvas = Canvas(self, width, height)
-        canvas.move(0,0)
-        self.show()
 
     def save_table(self):
         # system dialog code
@@ -284,7 +292,7 @@ class ResultsWindow(QtWidgets.QMainWindow):
                 save_file += ".png"
                 self.imageName = save_file        
             #saveimage
-            c = Canvas(self, width=6, height=7.2)
+            c = MplWidget()
             c.saveImage(self.imageName)
 
     # initial loading function
@@ -300,6 +308,7 @@ class ResultsWindow(QtWidgets.QMainWindow):
     
     # .csv functions
     def loadCsv(self, fileName):
+        row_dict = settings.myList['row_dict']
         with open(fileName, "r") as fileInput:
             for row in csv.reader(fileInput):    
                 items = [
@@ -307,6 +316,19 @@ class ResultsWindow(QtWidgets.QMainWindow):
                     for field in row
                 ]
                 self.model.appendRow(items)
+                for rowNum1 in range(0,len(list(csv.reader(fileName)))+1):
+                    for colNum1 in range(0,len(row_dict)):
+                        self.model.setData(
+                                    self.model.index(rowNum1, colNum1), QtCore.Qt.AlignCenter, 
+                                    QtCore.Qt.TextAlignmentRole
+                                )
+                        if rowNum1 == 0:
+                            self.model.setData(
+                                    self.model.index(0, colNum1), QBrush(
+                                        QColor(214,188,138)), QtCore.Qt.BackgroundRole
+                                )
+
+
 
     def writeCsv(self, fileName):
         with open(fileName, "w", newline='') as fileOutput:
@@ -325,18 +347,20 @@ class ResultsWindow(QtWidgets.QMainWindow):
                     fields.append(cell)
                 writer.writerow(fields)
     
-class Canvas(FigureCanvas):
-    def __init__(self, parent = None, width=10, height=10, dpi = 100):
-        fig = Figure(figsize=(width, height), dpi=dpi)
-        self.axes = fig.add_subplot(111)
-        self.fileName = "StationPlacement.png"
-        FigureCanvas.__init__(self, fig)
-        FigureCanvas.setSizePolicy(self,
-                QtWidgets.QSizePolicy.Expanding,
-                QtWidgets.QSizePolicy.Expanding)
-        FigureCanvas.updateGeometry(self)
+# class that plots the station placement results from taskgroupping.py
+class MplWidget(QWidget):
+    def __init__(self, parent = None):
+        QWidget.__init__ ( self ,  parent )
         self.setParent(parent)
-        ax = self.axes
+        self.canvas  =  FigureCanvas ( Figure(figsize=(4, 4), dpi=100))
+        self.layout = QGridLayout(self)
+        self.layout.addWidget(self.canvas)
+        self.setLayout(self.layout)
+  
+        self.canvas.axes  =  self.canvas.figure.add_subplot(111)        
+    
+        self.fileName = "StationPlacement.png"
+        ax = self.canvas.axes
         ax.set_title('Layout Results')
         xgrid, ygrid, maxwidth, maxlen = 0, 0, 0, 0
         ax.grid(True)
@@ -377,6 +401,7 @@ class Canvas(FigureCanvas):
 
             ax.set_xlabel('X (m)')
             ax.set_ylabel('Y (m)')
+
         for item in rect:
             ax.add_patch(item)
 
@@ -384,18 +409,8 @@ class Canvas(FigureCanvas):
 
     def saveImage(self, fileName):
         with open(fileName, "wb") as layoutImage:
-            self.axes.figure.savefig(layoutImage)
+            self.canvas.axes.figure.savefig(layoutImage)
 
-    def on_resize(self,event):
-        # determine the ratio of old width/height to new width/height
-        wscale = float(event.width)/self.width
-        hscale = float(event.height)/self.height
-        self.width = event.width
-        self.height = event.height
-        # resize the canvas 
-        self.config(width=self.width, height=self.height)
-        # rescale all the objects tagged with the "all" tag
-        self.scale("all",0,0,wscale,hscale)
 
 class Controller:
 
