@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>762</width>
-    <height>421</height>
+    <height>582</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -30,7 +30,7 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="9">
+      <item row="2" column="8">
        <widget class="QPushButton" name="pushButtonResults">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
@@ -43,30 +43,7 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="0" rowspan="2" colspan="10">
-       <widget class="QTableView" name="tableView">
-        <property name="sizeAdjustPolicy">
-         <enum>QAbstractScrollArea::AdjustToContents</enum>
-        </property>
-        <attribute name="horizontalHeaderCascadingSectionResizes">
-         <bool>true</bool>
-        </attribute>
-       </widget>
-      </item>
-      <item row="2" column="2">
-       <spacer name="horizontalSpacer_8">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="2" column="6">
+      <item row="2" column="5">
        <widget class="QPushButton" name="pushButtonLoad">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
@@ -79,7 +56,7 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="4">
+      <item row="2" column="3">
        <widget class="QPushButton" name="pushButtonWrite">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
@@ -92,8 +69,8 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="5">
-       <spacer name="horizontalSpacer_2">
+      <item row="2" column="4">
+       <spacer name="horizontalSpacer_3">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
@@ -108,7 +85,30 @@
         </property>
        </spacer>
       </item>
-      <item row="2" column="8">
+      <item row="2" column="2">
+       <spacer name="horizontalSpacer_8">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="0" column="0" rowspan="2" colspan="9">
+       <widget class="QTableView" name="tableView">
+        <property name="sizeAdjustPolicy">
+         <enum>QAbstractScrollArea::AdjustToContents</enum>
+        </property>
+        <attribute name="horizontalHeaderCascadingSectionResizes">
+         <bool>true</bool>
+        </attribute>
+       </widget>
+      </item>
+      <item row="2" column="7">
        <spacer name="horizontalSpacer_5">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
