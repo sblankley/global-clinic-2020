@@ -34,8 +34,9 @@ class SplashWindow(QtWidgets.QMainWindow):
         super(SplashWindow, self).__init__() # Call the inherited classes __init__ method
         uic.loadUi(r'backend\splash.ui', self) # Load the splash window .ui file
         self.model = QtGui.QStandardItemModel(self)
-        self.setWindowTitle("HMC Optimization Suite")
+        self.setWindowTitle("Welcome!")
         self.setWindowIcon(QIcon(r'backend\hmc.png'))
+
 
         # Settings specific to the Splash Window 
 
@@ -107,7 +108,7 @@ class DataWindow(QtWidgets.QMainWindow):
 
         self.fileName = r'backend\template.csv' # default input filename
         self.model = QtGui.QStandardItemModel(self)
-        self.setWindowTitle("HMC Optimization Suite")
+        self.setWindowTitle("Enter the production line data to be optimized")
         self.setWindowIcon(QIcon(r'backend\hmc.png'))
         self.tableView = self.findChild(QtWidgets.QTableView,"tableView")
         self.tableView.setModel(self.model)
@@ -146,8 +147,9 @@ class DataWindow(QtWidgets.QMainWindow):
     def save_table(self):
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
-        self.save_file, _ = QFileDialog.getSaveFileName(None,"Choose input file to save","","Comma Separated Values Files (*.csv)", options=options)
-        if (self.save_file):
+        temp_file, _ = QFileDialog.getSaveFileName(None,"Choose input file to save","","Comma Separated Values Files (*.csv)", options=options)
+        if (temp_file):
+            self.save_file = temp_file
             ext = ""
             # check if user input a .csv file extension: if not, append with .csv
             for x in [-4,-3,-2,-1]:
@@ -215,7 +217,7 @@ class HelpWindow(QtWidgets.QMainWindow):
         super(HelpWindow, self).__init__() # Call the inherited classes __init__ method
         uic.loadUi(r'backend\help.ui', self) # Load the main .ui file
         self.model = QtGui.QStandardItemModel(self)
-        self.setWindowTitle("HMC Optimization Suite Help")
+        self.setWindowTitle("Help")
         self.setWindowIcon(QIcon(r'backend\hmc.png'))
 
     def on_pushButtonDone_clicked(self):
@@ -225,15 +227,15 @@ class ResultsWindow(QtWidgets.QMainWindow):
 
     startover = QtCore.pyqtSignal()
     helpOpen = QtCore.pyqtSignal()
+    back = QtCore.pyqtSignal()
 
     # Initialize the GUI window and define the objects within it
     def __init__(self):
        super(ResultsWindow, self).__init__() # Call the inherited classes __init__ method
        uic.loadUi(r'backend\results.ui', self) # Load the main .ui file, prepend with 'r' to avoid '/r' issue
-       self.fileName = "pLineOpt.csv" # default output file name
        self.imageName = "StationLayout.png" # default output file name
        self.model = QtGui.QStandardItemModel(self)
-       self.setWindowTitle("HMC Optimization Results")
+       self.setWindowTitle("Optimized Results")
        self.setWindowIcon(QIcon(r'backend\hmc.png'))
        self.tableView = self.findChild(QtWidgets.QTableView,"tableView")
        self.tableView.setModel(self.model)
@@ -250,6 +252,8 @@ class ResultsWindow(QtWidgets.QMainWindow):
        layout.addWidget(self.pushButtonReturn, 7,10,1,1)
        widget.setLayout(layout) # sets layout
        self.setCentralWidget(widget) # makes all these widgets central widgets
+       self.save_file = r'pLineOpt.csv'
+
 
        self.pushButtonSaveTable.clicked.connect(self.save_table)   # create non-implicit function to avoid double-press issue
        self.pushButtonSaveLayout.clicked.connect(self.save_layout) # ^
@@ -261,8 +265,9 @@ class ResultsWindow(QtWidgets.QMainWindow):
         # system dialog code
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
-        save_file, _ = QFileDialog.getSaveFileName(None,"Choose output data file","","Comma Separated Values Files (*.csv)", options=options)
-        if save_file:
+        temp_file, _ = QFileDialog.getSaveFileName(None,"Choose output data file","","Comma Separated Values Files (*.csv)", options=options)
+        if (temp_file):
+            self.save_file = temp_file
             ext = ""
             for x in [-4,-3,-2,-1]:
                 end = str(save_file[x])
@@ -270,10 +275,9 @@ class ResultsWindow(QtWidgets.QMainWindow):
             if (ext == ".csv"):                
                 self.fileName = save_file
             else:
-                save_file += ".csv"
-                self.fileName = save_file        
+                self.save_file += ".csv"
             #csvwrite
-            self.writeCsv(self.fileName)
+            self.writeCsv(self.save_file)
 
     def save_layout(self):
     # system dialog code
@@ -298,7 +302,7 @@ class ResultsWindow(QtWidgets.QMainWindow):
     # initial loading function
     def load_init(self):
         self.model.clear()
-        self.loadCsv(self.fileName)
+        self.loadCsv(self.save_file)
 
     def on_pushButtonReturn_clicked(self):
         self.startover.emit()
@@ -306,6 +310,10 @@ class ResultsWindow(QtWidgets.QMainWindow):
     def on_pushButtonHelp_clicked(self):
         self.helpOpen.emit()    
     
+    def on_pushButtonBack_clicked(self):
+        self.back.emit()
+
+
     # .csv functions
     def loadCsv(self, fileName):
         row_dict = settings.myList['row_dict']
@@ -347,12 +355,12 @@ class ResultsWindow(QtWidgets.QMainWindow):
                     fields.append(cell)
                 writer.writerow(fields)
     
-# class that plots the station placement results from taskgroupping.py
+# class that plots the station placement results from taskgrouping.py
 class MplWidget(QWidget):
     def __init__(self, parent = None):
         QWidget.__init__ ( self ,  parent )
         self.setParent(parent)
-        self.canvas  =  FigureCanvas ( Figure(figsize=(4, 4), dpi=100))
+        self.canvas  =  FigureCanvas ( Figure()) # figsize=(4, 4), dpi=100))
         self.layout = QGridLayout(self)
         self.layout.addWidget(self.canvas)
         self.setLayout(self.layout)
@@ -457,7 +465,8 @@ class Controller:
         self.results = ResultsWindow()
         self.results.load_init() # .csv shows on startup
         self.results.helpOpen.connect(self.show_help)
-        self.results.startover.connect(self.show_warning)
+        self.results.startover.connect(self.show_warning_exit)
+        self.results.back.connect(self.show_warning_back)
         self.window.close()
         self.results.show()
     
@@ -471,16 +480,27 @@ class Controller:
     def close_help(self):
         self.help.close()
 
-    def show_warning(self):
+    def show_warning_exit(self):
         self.warning = Warning()
-        self.warning.go.connect(self.close_results)
+        self.warning.go.connect(self.exit)
+        self.warning.cancel.connect(self.close_warning)
+        self.warning.show()
+
+    def show_warning_back(self):
+        self.warning = Warning()
+        self.warning.go.connect(self.return_to_results)
         self.warning.cancel.connect(self.close_warning)
         self.warning.show()
 
     def close_warning(self):
         self.warning.close()
     
-    def close_results(self):
+    def return_to_results(self):
+        self.warning.close()
+        self.results.close()
+        self.window.show()
+
+    def exit(self):
         self.warning.close()
         self.results.close()
         
