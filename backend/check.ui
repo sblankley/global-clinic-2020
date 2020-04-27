@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>397</width>
-    <height>174</height>
+    <width>469</width>
+    <height>185</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -90,7 +90,7 @@ p, li { white-space: pre-wrap; }
          <bool>false</bool>
         </property>
         <property name="text">
-         <string>Don't Save and Continue</string>
+         <string>Continue without Saving</string>
         </property>
        </widget>
       </item>
@@ -132,7 +132,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>397</width>
+     <width>469</width>
      <height>22</height>
     </rect>
    </property>
