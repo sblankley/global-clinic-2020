@@ -35,6 +35,7 @@ def group():
     jobNames = settings.myList['jobNames']
     length = settings.myList['length']
     width = settings.myList['width']
+    compCounter = settings.myList['compCounter']
 
     M = 100
 
@@ -79,8 +80,21 @@ def group():
     #prob.solve()
     filePath = Path().absolute()
     fileStr = str(filePath)
-    fileStr += r"\backend\cbc.exe"
-    prob.solve(COIN_CMD(path = fileStr))
+    fileStr += r"/backend/cbc.exe"
+    # prob.solve(COIN_CMD(path = fileStr))
+    prob.solve()
+
+    # OUTPUT MGMT
+
+    for s in stations:
+        if (sum(value(ifJobAtStation[j][s]) for j in range(numJobs))!=0):
+            print("/nStation %s:" % (s))
+        for j in range(numJobs):
+            if (value(ifJobAtStation[j][s]) != 0):
+                print ("ifJobAtStation(%s,%s)=%s" % (j,s,value(ifJobAtStation[j][s])))
+        for t in types:
+            if (value(numWorkers[t][s]) != 0):
+                print ("numWorkers(%s,%s)=%s" % (t,s,value(numWorkers[t][s])))
 
     # eliminate null stations
     new_out = {}
