@@ -409,7 +409,6 @@ class MplWidget(QWidget):
 
             if placement[s][2]>xgrid:
                 xgrid=placement[s][2]
-                lastStationLength = placement[s][0]
             if placement[s][3]>ygrid:
                 ygrid=placement[s][3]
             if placement[s][1]>maxwidth:
@@ -425,9 +424,10 @@ class MplWidget(QWidget):
             ax.text(self.cx, self.cy, 'S%1i' % (s+1), color='k', 
                     ha='center', va='center', weight='bold')
         spacer = 1
+        lastStationLength = placement[a-1][0]
         Xbound = xgrid+lastStationLength+spacer
         Ybound = ygrid+maxwidth+spacer
-        ax.set_xticks(numpy.arange(0, numpy.ceil(Xbound)+1, step=numpy.ceil(Xbound/10)))
+        ax.set_xticks(numpy.arange(0, numpy.ceil(Xbound)+numpy.ceil(Xbound/10)+1, step=numpy.ceil(Xbound/10)))
         ax.set_yticks(numpy.arange(0, numpy.ceil(Ybound)+1, step=numpy.ceil(Ybound/10)))
 
         ax.set_xlabel('X (m)')
