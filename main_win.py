@@ -171,17 +171,17 @@ class DataWindow(QtWidgets.QMainWindow):
         options |= QFileDialog.DontUseNativeDialog
         self.temp_file, _ = QFileDialog.getSaveFileName(None,"Choose input file to save","","Comma Separated Values Files (*.csv)", options=options)
         if (self.temp_file):
-            self.save_file = self.temp_file
+            self.fileName = self.temp_file
             ext = ""
             # check if user input a .csv file extension: if not, append with .csv
             for x in [-4,-3,-2,-1]:
-                end = str(self.save_file[x])
+                end = str(self.fileName[x])
                 ext += end
             if (ext == ".csv"):                
-                self.save_file = self.temp_file
+                self.fileName = self.temp_file
             else:
-                self.save_file += ".csv"
-            self.writeCsv(self.save_file)
+                self.fileName += ".csv"
+            self.writeCsv(self.fileName)
     
     #
     # .csv functions
@@ -474,6 +474,7 @@ class Controller:
     def new_save(self):
         self.window.save_table()
         if(self.window.temp_file):
+            self.check.fileName = self.window.fileName
             self.show_results()        
     
     def new_upload(self):
