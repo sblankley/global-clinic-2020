@@ -20,12 +20,11 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import math 
 
-QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
-
+## Initial setup things
+QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True) # enable high DPI scaling for high-res displays
 backend.settings.init() # initialize "global" variables list
 
 ### UI Classes
-
 class SplashWindow(QtWidgets.QMainWindow):
 
     helpOpen = QtCore.pyqtSignal()
@@ -39,14 +38,26 @@ class SplashWindow(QtWidgets.QMainWindow):
         self.setWindowTitle("Welcome!")
         self.setWindowIcon(QIcon(r'backend\hmc.png'))
 
-
-        # Settings specific to the Splash Window 
-
     def on_pushButtonContinueToInput_clicked(self):
         self.dataOpen.emit()
     
     def on_pushButtonHelp_clicked(self):
         self.helpOpen.emit() 
+
+class Error(QtWidgets.QMainWindow):
+
+    go = QtCore.pyqtSignal()
+    cancel = QtCore.pyqtSignal()
+
+    def __init__(self, fileName):
+        super(Error, self).__init__() # Call the inherited classes __init__ method
+        uic.loadUi(r'backend\error.ui', self) # Load the main .ui file
+        self.setWindowTitle('Input data file error')        
+        self.setWindowIcon(QIcon(r'backend\hmc.png'))
+        
+        # pushbutton connections
+        self.pushButtonContinue.clicked.connect(self.go.emit)
+        self.pushButtonCancel.clicked.connect(self.cancel.emit)
 
 class Warning(QtWidgets.QMainWindow):
 
@@ -63,15 +74,6 @@ class Warning(QtWidgets.QMainWindow):
         self.pushButtonContinue.clicked.connect(self.go.emit)
         self.pushButtonCancel.clicked.connect(self.cancel.emit)
 
-        layout = QtWidgets.QGridLayout()
-    
-    # def on_pushButtonContinue_clicked(self):
-    #     self.go.emit()
-
-    # def on_pushButtonCancel_clicked(self):
-    #     self.cancel.emit()
-
-
 class Check(QtWidgets.QMainWindow):
 
     save = QtCore.pyqtSignal()
@@ -87,8 +89,6 @@ class Check(QtWidgets.QMainWindow):
         layout = QtWidgets.QGridLayout()
 
         self.fileName = fileName
-        # push button connection
-        #self.pushButtonContinue.clicked.connect(self.save_table)
         self.pushButtonSave.clicked.connect(self.save_and_continue)
     
     def on_pushButtonContinue_clicked(self):
@@ -100,11 +100,12 @@ class Check(QtWidgets.QMainWindow):
     def save_and_continue(self):
         self.save.emit()
 
-
 class DataWindow(QtWidgets.QMainWindow):
 
     helpOpen = QtCore.pyqtSignal()
     results  = QtCore.pyqtSignal()
+    error = QtCore.pyqtSignal()
+    
     #
     # Initialize the GUI window and define the objects within it
     #
@@ -129,30 +130,42 @@ class DataWindow(QtWidgets.QMainWindow):
         # scaling settings for the window
         self.tableView.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.tableView.verticalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
+    
     #
     # startup function to load template
     #
     def startup(self):
         self.model.clear()
         self.loadCsv(self.fileName)
-    #
-    # Functions for connecting buttons to external functionality
-    #
-    # def on_pushButtonResults_clicked(self):
-    #     self.results.emit()
     
-    # def on_pushButtonHelp_clicked(self):
-    #     self.helpOpen.emit()    
-
+    #
+    # import new file to GUI
+    #
     def upload(self):
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
-        new, _ = QFileDialog.getOpenFileName(None, "Choose input data file", "", "Comma Separated Value Files, (* .csv)", options = options )
-        if(new):
-            self.fileName = new
-            self.model.clear()
-            self.loadCsv(self.fileName)
+        self.new, _ = QFileDialog.getOpenFileName(None, "Choose input data file", "", "Comma Separated Value Files, (* .csv)", options = options )
+        if (self.new):
+            ext = ""
+            for x in [-4,-3,-2,-1]:
+                end = str(self.new[x])
+                ext += end
+            if (ext == ".csv"): # .csv file extension?
+                self.fileName = self.new                
+                self.model.clear()
+                self.loadCsv(self.fileName)
+            else: #if not, they've selected an incompatible filename
+                self.errorFunct()
     
+    #
+    # emit error signal to open error 
+    # 
+    def errorFunct(self): 
+        self.error.emit()
+   
+    #
+    # save GUI table to file
+    #    
     def save_table(self):
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
@@ -169,6 +182,7 @@ class DataWindow(QtWidgets.QMainWindow):
             else:
                 self.save_file += ".csv"
             self.writeCsv(self.save_file)
+    
     #
     # .csv functions
     #
@@ -179,6 +193,7 @@ class DataWindow(QtWidgets.QMainWindow):
                     QtGui.QStandardItem(field)
                     for field in row 
                 ]
+                # gray out columns and add color to headers
                 self.model.appendRow(items)
                 for rowNum1 in range(0,len(list(csv.reader(fileName)))+1):
                     for colNum1 in range(0,10):
@@ -213,8 +228,7 @@ class DataWindow(QtWidgets.QMainWindow):
                             QtCore.Qt.TextAlignmentRole
                         )               
                     fields.append(cell)
-                writer.writerow(fields)
-            
+                writer.writerow(fields)          
     
 class HelpWindow(QtWidgets.QMainWindow):
 
@@ -262,7 +276,6 @@ class ResultsWindow(QtWidgets.QMainWindow):
        widget.setLayout(layout) # sets layout
        self.setCentralWidget(widget) # makes all these widgets central widgets
        self.save_file = r'pLineOpt.csv'
-
 
        self.pushButtonSaveTable.clicked.connect(self.save_table)   # create non-implicit function to avoid double-press issue
        self.pushButtonSaveLayout.clicked.connect(self.save_layout) # ^
@@ -347,8 +360,6 @@ class ResultsWindow(QtWidgets.QMainWindow):
                                         QColor(214,188,138)), QtCore.Qt.BackgroundRole
                                 )
 
-
-
     def writeCsv(self, fileName):
         with open(fileName, "w", newline='') as fileOutput:
             writer = csv.writer(fileOutput)
@@ -431,7 +442,6 @@ class MplWidget(QWidget):
         with open(fileName, "wb") as layoutImage:
             self.canvas.axes.figure.savefig(layoutImage)
 
-
 class Controller:
 
     def __init__(self):
@@ -451,6 +461,7 @@ class Controller:
         self.window.startup() # .csv shows on startup
         self.window.helpOpen.connect(self.show_help)
         self.window.results.connect(self.show_check)
+        self.window.error.connect(self.show_error)
         self.window.show()
 
     def show_check(self):
@@ -464,6 +475,10 @@ class Controller:
         self.window.save_table()
         if(self.window.temp_file):
             self.show_results()        
+    
+    def new_upload(self):
+        self.window.upload()
+        self.error.close()  
 
     def show_results(self):
         self.check.close()
@@ -480,11 +495,14 @@ class Controller:
 
     def show_help(self):
         self.help = HelpWindow()
-        self.help.done.connect(self.close_help)
+        self.help.done.connect(self.help.close)
         self.help.show()
-
-    def close_help(self):
-        self.help.close()
+        
+    def show_error(self):
+        self.error = Error(self.window.fileName)
+        self.error.go.connect(self.new_upload)
+        self.error.cancel.connect(self.error.close)
+        self.error.show()
 
     def show_warning_exit(self):
         self.warning = Warning()
@@ -516,7 +534,3 @@ app.setStyle("Fusion")
 controller = Controller()
 controller.show_splash()
 sys.exit(app.exec_())
-
-
-if __name__ == '__main__':
-    main()
