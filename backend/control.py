@@ -1,10 +1,10 @@
 # control.py
 
-from backend import CSVReader, taskgrouping
+from backend import CSVReader, optimization
 
 def run_opt(fileName):
     CSVReader.read(fileName)
-    taskgrouping.group()
+    optimization.group()
 
 # settings.init()
 # CSVReader.read(fileName)
