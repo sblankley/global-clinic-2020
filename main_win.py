@@ -6,7 +6,7 @@
 
 # import necessary libraries
 import backend
-from backend import taskgrouping, CSVReader, settings, control 
+from backend import optimization, CSVReader, settings, control 
 import sys, csv 
 from PyQt5 import QtCore, QtWidgets, QtGui, uic
 from PyQt5.QtWidgets import *
@@ -113,7 +113,7 @@ class DataWindow(QtWidgets.QMainWindow):
         super(DataWindow, self).__init__() # Call the inherited classes __init__ method
         uic.loadUi(r'backend\dataWindow.ui', self) # Load the main .ui file
 
-        self.fileName = r'backend\template.csv' # default input filename
+        self.fileName = r'template.csv' # default input filename
         self.model = QtGui.QStandardItemModel(self)
         self.setWindowTitle("Enter the production line data to be optimized")
         self.setWindowIcon(QIcon(r'backend\hmc.png'))
@@ -477,10 +477,6 @@ class Controller:
             self.check.fileName = self.window.fileName
             self.show_results()        
     
-    def new_upload(self):
-        self.window.upload()
-        self.error.close()  
-
     def show_results(self):
         self.check.close()
         control.run_opt(self.check.fileName)
@@ -505,6 +501,10 @@ class Controller:
         self.error.cancel.connect(self.error.close)
         self.error.show()
 
+    def new_upload(self):
+        self.window.upload()
+        self.error.close() 
+
     def show_warning_exit(self):
         self.warning = Warning()
         self.warning.go.connect(self.exit)
@@ -513,14 +513,14 @@ class Controller:
 
     def show_warning_back(self):
         self.warning = Warning()
-        self.warning.go.connect(self.return_to_results)
+        self.warning.go.connect(self.return_to_input)
         self.warning.cancel.connect(self.close_warning)
         self.warning.show()
 
     def close_warning(self):
         self.warning.close()
     
-    def return_to_results(self):
+    def return_to_input(self):
         self.warning.close()
         self.results.close()
         self.window.show()
