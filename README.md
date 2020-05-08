@@ -44,12 +44,15 @@ In order to populate the template, you should understand what data is needed in 
 
 
 Once the desired data is uploaded, click "Results". This opens a warning page to ensure that changes in the table are saved to a .csv file. If you have made changes to the table in the software, click "Save and Continue", which will open a new file dialog to save the table to a .csv file. If you have not made any changes, click "Continue without Saving" to start the optimization.
+
 #insert pic
 
 Once the software has found an optimal process distribution to minimize the number of operators, the data window will close and the results window will open. Looking at the results window, the top panel contains the process distribution results, broken down by station, and the bottom panel contains a corresponding linear layout. The result data shows which tasks are located at each station, along with the number of operators of each type needed to complete those tasks at that station. Note that there is a computer operator column for each type of automated process in our input data.
+
 #insert pic
 
 To save the results data, click “save .csv results”. Note that the software automatically saves the output results in a pLineOpt.csv, but using the save button allows you to name and save it anywhere on your computer. To save the layout, click “save .png layout”. To go back to the data window, click “Go Back”. To exit the software, click “Exit”. Since the "Go Back" and "Exit" buttons will close the results window, a warning message appears to confirm that you want it to close. 
 
 For further detail on the functionality of the software, consult Section 6.1 in our Final Report 
+
 #insert link to google drive
