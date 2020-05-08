@@ -7,9 +7,14 @@ Begin in the folder containing the executable file and several folders of suppor
 #insert pic 
 
 Note that when opening the "main.exe" for the first time, your computer may open a “Windows protected your PC” dialog. 
-..*If only opening the software once, you can click “Run Anyway” to open the software. If that is not an option, click “More Info” and then “Run Anyway” to continue. 
-..*To prevent this dialog from opening repeated times, you will need to add an exclusion to Windows Security by following the steps at the following link, <https://support.microsoft.com/en-us/help/4028485/windows-10-add-an-exclusion-to-windows-security>
+
+* If only opening the software once, you can click “Run Anyway” to open the software. If that is not an option, click “More Info” and then “Run Anyway” to continue. 
+
+* To prevent this dialog from opening repeated times, you will need to add an exclusion to Windows Security by following the steps at the following link, <https://support.microsoft.com/en-us/help/4028485/windows-10-add-an-exclusion-to-windows-security>. 
 Note that these steps are specific to Windows 10, so use whichever steps are appropriate for your operating system.
+
+
+For a recorded walk-through of these steps, refer the video at this link: <https://youtu.be/4X3S24hETXM>
 
 A blank terminal window pops up when the software opens. The terminal is not necessary, but closing this window also closes the software, so either minimize it or just leave it on the screen.
 
@@ -37,6 +42,7 @@ In order to populate the template, you should understand what data is needed in 
 9. Column 9 is where we begin overall production line parameters that are not linked to any particular process. This column contains the takt time in seconds. Takt time is the rate at which a product needs to be completed in order to meet customer demand.
 10. Column 10, like Column 9, is also an overall parameter, which means it only needs to be entered once. This column contains the human capacity defined as the maximum number of human operators that can be assigned to a single station. This is an optional parameter, but it gives the user the flexibility to indicate at what point a station becomes too crowded.
 
+
 Once the desired data is uploaded, click "Results". This opens a warning page to ensure that changes in the table are saved to a .csv file. If you have made changes to the table in the software, click "Save and Continue", which will open a new file dialog to save the table to a .csv file. If you have not made any changes, click "Continue without Saving" to start the optimization.
 #insert pic
 
@@ -45,5 +51,5 @@ Once the software has found an optimal process distribution to minimize the numb
 
 To save the results data, click “save .csv results”. Note that the software automatically saves the output results in a pLineOpt.csv, but using the save button allows you to name and save it anywhere on your computer. To save the layout, click “save .png layout”. To go back to the data window, click “Go Back”. To exit the software, click “Exit”. Since the "Go Back" and "Exit" buttons will close the results window, a warning message appears to confirm that you want it to close. 
 
-For a recorded walk-through of these steps, refer the video at this link: <https://youtu.be/4X3S24hETXM>
-For further detail on the functionality of the software, consult Section 6.1 in our Final Report #insert link to google drive
+For further detail on the functionality of the software, consult Section 6.1 in our Final Report 
+#insert link to google drive
