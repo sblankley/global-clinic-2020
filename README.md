@@ -53,7 +53,3 @@ Once the software has found an optimal process distribution to minimize the numb
 <img src="ReadmeImages/ui_results_windowed.png" width="450">
 
 To save the results data, click “save .csv results”. Note that the software automatically saves the output results in a pLineOpt.csv, but using the save button allows you to name and save it anywhere on your computer. To save the layout, click “save .png layout”. To go back to the data window, click “Go Back”. To exit the software, click “Exit”. Since the "Go Back" and "Exit" buttons will close the results window, a warning message appears to confirm that you want it to close. 
-
-For further detail on the functionality of the software, consult Section 6.1 in our Final Report 
-
-#insert link to google drive
